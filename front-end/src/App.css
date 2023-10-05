@@ -1,0 +1,77 @@
+.noteContainer {
+    border: 1px solid grey;
+    min-height: 15rem;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+button {
+    margin: 5px;
+}
+
+
+
+*{
+    margin: 0px;
+    padding: 0px;
+    
+}
+body{
+    /* background-color: black; */
+}
+.loginPage{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+.loginBg{
+    width: 100vw;
+    height: 100vh;
+    opacity: 0.3;
+    position: absolute;
+    z-index: -1;
+}
+
+.loginTab{
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    width: 40vw;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    gap: 20px;
+    opacity: 0.8;
+    top: 0px;
+    border-radius: 20px;
+    min-height: 50vh;
+    margin-top: 25vh;
+}
+.loginText{
+    color: rgb(255, 0, 0);
+    font-size: 2.5rem;
+}
+.loginEmail{
+    width: 30vw;
+}
+.loginPassword{
+    width: 30vw;
+}
+.loginBtn{
+    height: 8vh;
+    width: 10vw;
+}
+.loginSignupText{
+    color: black;
+}
+.toSignUp{
+    color: blue;
+    font-weight: bold;
+    margin: 0px 10px;
+
+}
+.toSignUp:hover{
+    cursor: pointer;
+}
