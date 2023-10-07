@@ -9,18 +9,9 @@ app = FastAPI()
 async def root():
     return {"message":"Hello world"}
 
+# this controller will upload multiple wav files
 @app.post("/upload/")
 async def upload(files: Annotated[List[UploadFile], File(description="Multiple wav files to upload")]):
-    
-    # data = file.file.read()
-    # extention = file.filename[-4:]
-    
-    # targetFile = open("uploads/out_" + str(time.time()).split('.')[0] + extention, "wb")
-    # targetFile.write(data)
-
-    # res: List[str] = []
-    # for file in files:
-    #     res.append(file.filename)
 
     storedFileNames: List[str] = []
 
