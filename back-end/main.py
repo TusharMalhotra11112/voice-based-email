@@ -13,7 +13,7 @@ async def root():
 @app.post("/register/")
 async def upload(email:Annotated[str, Form()], password:Annotated[str, Form()], files: Annotated[List[UploadFile], File(description="Multiple wav files to upload")]):
 
-    # email holds the email, password holds the password value and files holds the array files
+    # email holds the email, password holds the password value and files holds the array files 
 
     for file in files:
         data = file.file.read()
@@ -25,3 +25,7 @@ async def upload(email:Annotated[str, Form()], password:Annotated[str, Form()], 
         targetFile.write(data)
 
     return {"status":"success"}
+
+@app.post("/validateEmail/")
+async def validateEmail(email:Annotated[str, "Email to validate"]):
+    return {'status':"success"}
