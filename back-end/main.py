@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, Form
 from typing_extensions import Annotated
 import time
 from typing import List
@@ -10,10 +10,10 @@ async def root():
     return {"message":"Hello world"}
 
 # this controller will upload multiple wav files
-@app.post("/upload/")
-async def upload(files: Annotated[List[UploadFile], File(description="Multiple wav files to upload")]):
+@app.post("/register/")
+async def upload(email:Annotated[str, Form()], password:Annotated[str, Form()], files: Annotated[List[UploadFile], File(description="Multiple wav files to upload")]):
 
-    storedFileNames: List[str] = []
+    # email holds the email, password holds the password value and files holds the array files
 
     for file in files:
         data = file.file.read()
@@ -24,6 +24,4 @@ async def upload(files: Annotated[List[UploadFile], File(description="Multiple w
         targetFile = open(targetFileName, "wb")
         targetFile.write(data)
 
-        storedFileNames.append(file.filename)
-
-    return {"uploadedFiles": storedFileNames}
+    return {"status":"success"}
