@@ -17,9 +17,9 @@ async def upload(email:Annotated[str, Form()], password:Annotated[str, Form()], 
 
     for file in files:
         data = file.file.read()
-        ext = file.filename[-4:]
+        ext = file.filename.split('.')[1]
 
-        targetFileName = "uploads/" + file.filename[0:-4] + str(time.time()).split('.')[0] + ext
+        targetFileName = "uploads/" + file.filename.split('.')[0] + str(time.time()).split('.')[0] + '.' + ext
 
         targetFile = open(targetFileName, "wb")
         targetFile.write(data)
