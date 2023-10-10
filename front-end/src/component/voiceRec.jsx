@@ -1,21 +1,22 @@
 import React from 'react'
-import { AudioRecorder } from "react-audio-voice-recorder";
+import { AudioRecorder} from "react-audio-voice-recorder";
 
-export default function voiceRec() {
+export default function voiceRec({ voiceSample, setVoiceSample }) {
     const addAudioElement = (blob)=>{
         const url = URL.createObjectURL(blob)
         const audio = document.createElement("audio")
         audio.src = url
         audio.controls = true
-        document.body.appendChild(audio)
-        console.log(audio.src)
+        // document.body.appendChild(audio)]
+        let newVoiceSample = [...voiceSample]
+        newVoiceSample.push(blob)
+        setVoiceSample([...voiceSample,blob])
     }
-
 
     return (
         <div>
             <AudioRecorder
-                onRecordingComplete={addAudioElement}
+                onRecordingComplete={(blob)=>addAudioElement(blob)}
                 audioTrackConstraints={{
                     noiseSuppression:true,
                     echoCancellation:true,
@@ -24,6 +25,7 @@ export default function voiceRec() {
                 onNotAllowedOrFound={(err)=>console.log(err)}
                 // downloadOnSavePress={true}
                 downloadFileExtension='wav'
+                showVisualizer = 'true'
             />
         </div>
     )

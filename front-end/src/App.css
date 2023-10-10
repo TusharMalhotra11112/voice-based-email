@@ -75,3 +75,7 @@ body{
 .toSignUp:hover{
     cursor: pointer;
 }
+.dummy{
+    display: none;
+}
+
