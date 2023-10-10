@@ -4,11 +4,6 @@ import time
 from typing import List
 from fastapi.middleware.cors import CORSMiddleware
 
-from pydantic import BaseModel
-
-class TestInput(BaseModel):
-    buffer:str
-
 app = FastAPI()
 
 app.add_middleware(
@@ -22,22 +17,6 @@ app.add_middleware(
 @app.get("/")
 async def root():
     return {"message":"Hello world"}
-
-'''
-let formData = new FormData();
-      formData.append("email", "hello@gmail.com");
-      formData.append("password", "password123");
-      formData.append("files", audioBlob, "file1.wav");
-      formData.append("files", audioBlob, "file2.wav");
-      formData.append("files", audioBlob, "file3.wav");
-
-      fetch("http://localhost:8000/register", {
-        method: "POST",
-        body: formData,
-      })
-        .then((data) => data.json())
-        .then((res) => console.log(res));
-'''
 
 
 # this controller will upload multiple wav files
