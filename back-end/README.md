@@ -51,3 +51,18 @@ pip freeze -l requirements.txt
 
    // response will be {'status':'ok'}
    ```
+
+### Database table structure
+
+1. user_data table
+
+```sql
+  CREATE TABLE user_data (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  email_id VARCHAR(255),
+  password VARCHAR(255),
+  audio_1 LONGBLOB,
+  audio_2 LONGBLOB,
+  audio_3 LONGBLOB
+  );
+```
