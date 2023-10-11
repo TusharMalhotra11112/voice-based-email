@@ -21,8 +21,8 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
   
   const [number,setNumber] = useState(0)
 
-  const [email,setEmail] = useState("test")
-  const [pass,setPass] = useState("test")
+  const [email,setEmail] = useState("email")
+  const [pass,setPass] = useState("pass")
   const [transcriptText,setTranscriptText] = useState("")
   const [voiceSample,setVoiceSample] = useState([])
   const [voiceNumber,setVoiceNumber] = useState(0)
@@ -319,7 +319,7 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
 
   const mangeSignup = ()=>{
     return new Promise((res,rej)=>{
-
+      sendData()
     })
   }
 
@@ -343,7 +343,15 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
       manageSentence3()
     }
     else if(signUpNo === 5){
-      mangeSignup()
+      if(voiceNumber===0){
+        say("signing you in the website",5000)
+        .then(()=>{
+          mangeSignup()
+        })
+      }
+      else{
+        fire++
+      }
     }
   },[fire])
 
