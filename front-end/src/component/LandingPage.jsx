@@ -3,7 +3,7 @@ import Login from './Login'
 import SignUp from './SignUp'
 import VoiceRec from './voiceRec'
 export default function LandingPage() {
-  let [signUpNo,setSignUpNo] = useState(-1)
+  let [signUpNo,setSignUpNo] = useState(2)
   const handelSignUpNo =(num)=>{
     setSignUpNo(num)
   }
