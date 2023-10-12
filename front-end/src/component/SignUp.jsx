@@ -1,8 +1,6 @@
-import { Button, IconButton, TextField } from '@mui/material'
+import { Button, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import VoiceRec from './voiceRec'
 import SpeechRecognition,{useSpeechRecognition} from 'react-speech-recognition';
-import Speech from 'react-text-to-speech'
 import axios from 'axios'
 import { AudioRecorder, useAudioRecorder} from "react-audio-voice-recorder";
 
@@ -437,7 +435,7 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
                 audioTrackConstraints={{noiseSuppression:true,echoCancellation:true,sampleRate:1000,}}
                 onNotAllowedOrFound={(err)=>console.log(err)}
                 downloadFileExtension='wav'
-            />
+        />
         <Button variant="contained" className='loginBtn'
         onClick={()=>{sendData()}}
         >Sign Up</Button>
