@@ -4,6 +4,7 @@
 
 1. python
 2. fastapi
+3. pymysql
 
 ## To install the required packages.
 
@@ -21,36 +22,55 @@ pip freeze -l requirements.txt
 
 - Use python virtual environment to run this project. (optional)
 
-### Docs
+### Docs (steps to run server)
 
-1. How to run the rest api.
+1. Creat user_data table in the select database in mysql.
 
-   ```bash
-   # inside the backend-folder
-   uvicorn main:app --reload
+```sql
+CREATE TABLE your_table_name (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email_id VARCHAR(255),
+    password VARCHAR(255),
+    audio_1 LONGBLOB,
+    audio_2 LONGBLOB,
+    audio_3 LONGBLOB
+);
+```
 
-   # this command starts the server (at http://localhost:8000)
-   ```
+2. Create the database url in main.py page.
 
-2. How to hit the reigster route from frontend (react js)
+```py
+engine = create_engine("mysql+pymysql://<db_user>:<password>@<host>/<db>")
+```
 
-   ```js
-   let formData = new FormData();
-   formData.append("email", "hello@gmail.com");
-   formData.append("password", "password123");
-   formData.append("files", audioBlob_1, "file1.wav");
-   formData.append("files", audioBlob_2, "file2.wav");
-   formData.append("files", audioBlob_3, "file3.wav");
+3. How to run the rest api.
 
-   fetch("http://localhost:8000/register", {
-     method: "POST",
-     body: formData,
-   })
-     .then((data) => data.json())
-     .then((res) => console.log(res));
+```bash
+# inside the backend-folder
+uvicorn main:app --reload
 
-   // response will be {'status':'ok'}
-   ```
+# this command starts the server (at http://localhost:8000)
+```
+
+3. How to hit the reigster route from frontend (react js)
+
+```js
+let formData = new FormData();
+formData.append("email", "hello@gmail.com");
+formData.append("password", "password123");
+formData.append("files", audioBlob_1, "file1.wav");
+formData.append("files", audioBlob_2, "file2.wav");
+formData.append("files", audioBlob_3, "file3.wav");
+
+fetch("http://localhost:8000/register", {
+  method: "POST",
+  body: formData,
+})
+  .then((data) => data.json())
+  .then((res) => console.log(res));
+
+// response will be {'status':'success'}
+```
 
 ### Database table structure
 
