@@ -1,8 +1,13 @@
 from fastapi import FastAPI, File, UploadFile, Form
 from typing_extensions import Annotated
-import time
 from typing import List
 from fastapi.middleware.cors import CORSMiddleware
+
+from sqlalchemy import create_engine, text, URL
+
+
+# db_url format: mysql+pymysql://<db_user>:<password>@<host>/<db_name>
+engine = create_engine("mysql+pymysql://root:shobhit#2002@localhost:3306/voicebaseddata")
 
 app = FastAPI()
 
@@ -23,15 +28,22 @@ async def root():
 @app.post("/register/")
 async def upload(email:Annotated[str, Form()], password:Annotated[str, Form()], files: Annotated[List[UploadFile], File(description="Multiple wav files to upload")]):
 
-    # email holds the email, password holds the password value and files holds the array files 
-    for file in files:
-        data = file.file.read()
-        ext = file.filename.split('.')[1]
+    if(len(files)!=3):
+        return {"status":"fail", "message":"Invalid number of files"}
 
-        targetFileName = "uploads/" + file.filename.split('.')[0] + str(time.time()).split('.')[0] + '.' + ext
+    # inserting data in the db
+    with engine.connect() as conn:
+        conn.execute(text("INSERT INTO user_data (email_id, password, audio_1, audio_2, audio_3) VALUES (:email_id, :password, :audio_1, :audio_2, :audio_3)"), 
+        [{
+            "email_id": email,
+            "password": password,
+            "audio_1": files[0].file.read(),
+            "audio_2": files[1].file.read(),
+            "audio_3": files[2].file.read()
+        }])
 
-        targetFile = open(targetFileName, "wb")
-        targetFile.write(data)
+        conn.commit()
+
 
     return {"status":"success"}
 
