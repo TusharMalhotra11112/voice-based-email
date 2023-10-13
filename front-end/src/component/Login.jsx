@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react'
-import {Button, TextField} from '@mui/material'
-import VoiceRec from './voiceRec'
+import { Button, TextField } from '@mui/material'
+import React, { useEffect, useState } from 'react'
 import SpeechRecognition,{useSpeechRecognition} from 'react-speech-recognition';
+import axios from 'axios'
+import { AudioRecorder, useAudioRecorder} from "react-audio-voice-recorder";
 
-export default function Login() {
-  const synth = window.speechSynthesis;
-
+let fire = 0;
+export default function Login({logInNo,handleLoginNo}) {
   const {
     transcript,
     listening,
@@ -13,44 +13,229 @@ export default function Login() {
     browserSupportsSpeechRecognition
   } = useSpeechRecognition();
 
+  const recorderControls = useAudioRecorder()
+  
+  const [transcriptText,setTranscriptText] = useState("")
+  const [voiceData,setVoiceData] = useState(recorderControls.recordingBlob)
+  const [email,setEmail] = useState("")
+  const [blob,setBlob] = useState()
+  const [number,setNumber] = useState(0)
+  const [voiceNumber,setVoiceNumber] = useState(0)
 
-  const say = (text)=>{
-    const u = new SpeechSynthesisUtterance(text)
-    synth.speak(u)
-    console.log(text)
+  const nouns = ['cat', 'dog', 'house', 'car', 'tree']
+  const verbs = ['runs', 'jumps', 'sleeps', 'eats', 'drives']
+  const adjectives = ['happy', 'quick', 'lazy', 'big', 'red']
+  const adverbs = ['slowly', 'loudly', 'always', 'soon', 'never']
+
+  const fetchSentence = ()=>{
+    const noun = nouns[Math.floor(Math.random() * 5)]
+    const verb = verbs[Math.floor(Math.random() * 5)]
+    const adjective = adjectives[Math.floor(Math.random() * 5)]
+    const adverb = adverbs[Math.floor(Math.random() * 5)]
+    return `The ${adjective} ${noun} ${verb} ${adverb}`
   }
 
-  const listen = ()=>{
-    console.log("Listening")
-    if (browserSupportsSpeechRecognition) { 
-      SpeechRecognition.startListening()
-      setTimeout(() => {
+
+  const say = (text,duration)=>{
+    return new Promise((res,rej)=>{
+      if(logInNo === -1){
+        handleLoginNo(0)
+        fire++;
+      }
+      console.log(`saying: ${text}`)
+      const synth = window.speechSynthesis;
+      const u = new SpeechSynthesisUtterance(text)
+      synth.speak(u)
+      setTimeout(()=>{
+        resetTranscript()
+        res('')
+      },duration)
+
+    })
+  }
+
+  const listen = (duration)=>{
+    resetTranscript()
+    console.log("listening")
+    return new Promise((res,rej)=>{
+      resetTranscript()
+      say("now",0)
+      .then(()=>{
+        SpeechRecognition.startListening({continuous:true})
+      })
+      setTimeout(()=>{
+        const value = document.getElementsByClassName("dummy")[0].value
         SpeechRecognition.stopListening()
-      }, 5000);
-    }
-    else{
-      console.log("not supported")
-    }
+        res(value)
+      },duration)
+    })
   }
 
-  // console.log(transcript)
-  // say(transcript)
-
-  const email = ()=>{
-    say("enter Your Email")
-    listen()
-    // console.log(transcript)
-    // say(transcript)
-
+  const manageYesorNo=()=>{
+    return new Promise((res,rej)=>{
+      if(logInNo === 0){
+        const value = document.getElementsByClassName("dummy")[0].value
+        handleLoginNo(-1)
+        say(`is your Email Id ${value}? Say yes or no`,4000)
+        .then(()=>{
+          listen(3000)
+          .then((text)=>{
+            setTimeout(()=>{
+              if(text === "Yes." || text === "Yes" || text === "yes"){
+                console.log(`accepted : ${text}`)
+                handleLoginNo(0)
+                res('')
+              }
+              else{
+                console.log(`rejected :${text}`)
+                rej('')
+              }
+            },1000)
+          })
+        })
+      }
+      else if(logInNo === 1){
+        handleLoginNo(-1)
+        say(`would you like to repeate the sentence? say yes or No`,5000)
+        .then(()=>{
+          listen(3000)
+          .then((text)=>{
+            setTimeout(()=>{
+              if(text === "No." || text === "no" || text === "No"){
+                console.log(`accepted : ${text}`)
+                handleLoginNo(1)
+                res('')
+              }
+              else{
+                console.log(`rejected :${text}`)
+                rej('')
+              }
+            },1000)
+          })
+        })
+      }
+      
+    })
   }
 
+  const manageEmail = ()=>{
+    return new Promise((res,rej)=>{
+      if(logInNo===0){
+        say("Please,Enter Your Email Id",4000)
+        .then(()=>{
+          listen(5000)
+          .then(()=>{
+            manageYesorNo()
+            .then(()=>{
+              handleLoginNo(1)
+              fire++
+              res('')
+            })
+            .catch(()=>{
+              handleLoginNo(0)
+              fire++
+            })
+          })
+        })
+      }
+    })
+  }
+
+  const manageVoice = ()=>{
+    return new Promise((res,rej)=>{
+      if(logInNo===1){
+        say(`Please Say,${fetchSentence()}`,4000)
+        .then(()=>{
+          setNumber(1)
+          listen(5000)
+          .then(()=>{
+            setNumber(0)
+            manageYesorNo()
+            .then(()=>{
+              setVoiceNumber(1)
+              handleLoginNo(2)
+              fire++
+              res('')
+            })
+            .catch(()=>{
+              handleLoginNo(1)
+              fire++
+            })
+          })
+        })
+      }
+    })
+  }
+
+  const manageLogIn = ()=>{
+    console.log(`Email:${email} Voice: ${voiceData}`)
+  }
+
+  const addAudioElement = (blob)=>{
+    setBlob(blob)
+  }
+
+  useEffect(()=>{
+    if(logInNo === -1){
+      say("hello welcome to the login Page",3000)
+    }
+    else if(logInNo === 0){
+      manageEmail()
+    }
+    else if(logInNo === 1){
+      manageVoice()
+    }
+    else if(logInNo === 2){
+      manageLogIn()
+    }
+  },[fire])
+
+  useEffect(()=>{
+    console.log(`transcript:${transcript}`)
+    setTranscriptText(transcript)
+    if(logInNo === 0){
+      setEmail(transcript)
+    }
+  },[transcript])  
+
+
+  useEffect(()=>{
+    setVoiceData(recorderControls.recordingBlob)
+  },[recorderControls.recordingBlob])
+
+  useEffect(()=>{
+    if(number === 1){
+      recorderControls.startRecording()
+    }
+    if(number === 0){
+      recorderControls.stopRecording()
+    }
+  },[number])
+
+  useEffect(()=>{
+    if(voiceNumber===1){
+      addAudioElement(voiceData)
+    }
+  },[voiceNumber])
+
+  if (!browserSupportsSpeechRecognition) {
+    return (
+      <div>Speech Recognition is not supported in this browser</div>
+    )
+  }
 
   return (
     <div className='loginTab'>
+      <input className='dummy' value={transcriptText} onChange={setTranscriptText}/>
         <p className="loginText">Login</p>
-        <TextField id="standard-basic" label="Email-Id" variant="standard" className='loginEmail' onClick={email}/>
-        <VoiceRec/>
-        <Button variant="contained" className='loginBtn' onClick={()=>{say(transcript)}}>Login</Button>
+        <TextField id="standard-basic" label="Email-Id" variant="standard" className='loginEmail' value={email}/>
+        <AudioRecorder
+                recorderControls={recorderControls}
+                audioTrackConstraints={{noiseSuppression:true,echoCancellation:true,sampleRate:1000,}}
+                onNotAllowedOrFound={(err)=>console.log(err)}
+                downloadFileExtension='wav'
+        />
+        <Button variant="contained" className='loginBtn' onClick={()=>{manageLogIn()}}>Login</Button>
         <p className="loginSignupText">Dont have an Account?<span className='toSignUp'>Sign Up</span></p>
     </div>
   )

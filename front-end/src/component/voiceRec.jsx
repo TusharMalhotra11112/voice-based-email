@@ -1,22 +1,43 @@
-import React from 'react'
-import { AudioRecorder} from "react-audio-voice-recorder";
+import React, { useEffect } from 'react'
+import { AudioRecorder, useAudioRecorder} from "react-audio-voice-recorder";
 
-export default function voiceRec({ voiceSample, setVoiceSample }) {
+export default function VoiceRec({ voiceSample, setVoiceSample, number,setNumber,voiceNumber,setVoiceNumber}) {
     const addAudioElement = (blob)=>{
-        const url = URL.createObjectURL(blob)
-        const audio = document.createElement("audio")
-        audio.src = url
-        audio.controls = true
+        // const url = URL.createObjectURL(blob)
+        // const audio = document.createElement("audio")
+        // audio.src = url
+        // audio.controls = true
         // document.body.appendChild(audio)]
-        let newVoiceSample = [...voiceSample]
-        newVoiceSample.push(blob)
-        setVoiceSample([...voiceSample,blob])
+
+        if(voiceNumber === 1){
+            let newVoiceSample = [...voiceSample]
+            newVoiceSample.push(blob)
+            setVoiceSample(newVoiceSample)
+            setVoiceNumber(0)
+        }
+    }
+    
+    const recorderControls = useAudioRecorder()
+
+    useEffect(()=>{
+        console.log("VoiceRec")
+    },[])
+
+
+    if(number === 1 ||number === 2 ||number === 3){
+        recorderControls.startRecording()
+        setTimeout(()=>{
+            setNumber(0)
+            recorderControls.stopRecording()
+            addAudioElement(recorderControls.recordingBlob)
+        },5000)
     }
 
     return (
         <div>
             <AudioRecorder
-                onRecordingComplete={(blob)=>addAudioElement(blob)}
+                recorderControls={recorderControls}
+                // onRecordingComplete={(blob)=>addAudioElement(blob)}
                 audioTrackConstraints={{
                     noiseSuppression:true,
                     echoCancellation:true,
@@ -25,7 +46,7 @@ export default function voiceRec({ voiceSample, setVoiceSample }) {
                 onNotAllowedOrFound={(err)=>console.log(err)}
                 // downloadOnSavePress={true}
                 downloadFileExtension='wav'
-                showVisualizer = 'true'
+                // showVisualizer = 'true'
             />
         </div>
     )
