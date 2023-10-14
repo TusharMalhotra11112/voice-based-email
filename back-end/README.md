@@ -12,12 +12,6 @@
 pip install -r requirements.txt
 ```
 
-## To freeze the environment locally use this command.
-
-```bash
-pip freeze -l requirements.txt
-```
-
 ### Note
 
 - Use python virtual environment to run this project. (optional)
@@ -29,8 +23,8 @@ pip freeze -l requirements.txt
 ```sql
 CREATE TABLE your_table_name (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    email_id VARCHAR(255),
-    password VARCHAR(255),
+    email_id VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255)UNIQUE,
     audio_1 LONGBLOB,
     audio_2 LONGBLOB,
     audio_3 LONGBLOB
