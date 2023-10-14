@@ -9,15 +9,15 @@
 ## To install the required packages.
 
 ```bash
-     pip install fastapi
+    pip install fastapi
 ```
 
 ```bash
-     pip install "uvicorn[standard]"
+    pip install "uvicorn[standard]"
 ```
 
 ```bash
-     pip install sqlalchemy
+    pip install sqlalchemy
 ```
 
 ```bash
