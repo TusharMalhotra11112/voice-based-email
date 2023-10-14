@@ -9,7 +9,23 @@
 ## To install the required packages.
 
 ```bash
-pip install -r requirements.txt
+     pip install fastapi
+```
+
+```bash
+     pip install "uvicorn[standard]"
+```
+
+```bash
+     pip install sqlalchemy
+```
+
+```bash
+    pip install pymysql
+```
+
+```bash
+    pip install "uvicorn[standard]"
 ```
 
 ### Note
@@ -24,7 +40,7 @@ pip install -r requirements.txt
 CREATE TABLE your_table_name (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email_id VARCHAR(255) UNIQUE NOT NULL,
-    password VARCHAR(255)UNIQUE,
+    password VARCHAR(255) UNIQUE,
     audio_1 LONGBLOB,
     audio_2 LONGBLOB,
     audio_3 LONGBLOB
@@ -46,7 +62,7 @@ uvicorn main:app --reload
 # this command starts the server (at http://localhost:8000)
 ```
 
-3. How to hit the reigster route from frontend (react js)
+3. How to hit the register route from frontend (react js)
 
 ```js
 let formData = new FormData();
@@ -73,8 +89,8 @@ fetch("http://localhost:8000/register", {
 ```sql
   CREATE TABLE user_data (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  email_id VARCHAR(255),
-  password VARCHAR(255),
+  email_id VARCHAR(255) UNIQUE NOT NULL,
+  password VARCHAR(255) UNIQUE,
   audio_1 LONGBLOB,
   audio_2 LONGBLOB,
   audio_3 LONGBLOB
