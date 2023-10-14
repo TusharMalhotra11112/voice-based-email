@@ -37,10 +37,10 @@ CREATE TABLE your_table_name (
 );
 ```
 
-2. Create the database url in main.py page.
+2. Create a password.txt file in the backend-end folder and put your db_url there.
 
-```py
-engine = create_engine("mysql+pymysql://<db_user>:<password>@<host>/<db>")
+```txt
+mysql+pymysql://<db_user>:<password>@<host>/<db>
 ```
 
 3. How to run the rest api.

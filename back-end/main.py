@@ -7,7 +7,10 @@ from sqlalchemy import create_engine, text, URL
 
 
 # db_url format: mysql+pymysql://<db_user>:<password>@<host>/<db_name>
-engine = create_engine("mysql+pymysql://root:shobhit#2002@localhost:3306/voicebaseddata")
+password_file = open("password.txt", "r")
+password = password_file.readline()
+
+engine = create_engine(password)
 
 app = FastAPI()
 
