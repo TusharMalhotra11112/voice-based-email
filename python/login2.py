@@ -6,6 +6,7 @@ import wave
 import threading
 import random
 
+# this is comment
 nouns = ['cat', 'dog', 'house', 'car', 'tree']
 verbs = ['runs', 'jumps', 'sleeps', 'eats', 'drives']
 adjectives = ['happy', 'quick', 'lazy', 'big', 'red']
