@@ -2,6 +2,8 @@ from fastapi import FastAPI, File, UploadFile, Form
 from typing_extensions import Annotated
 from typing import List
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from utils import generate_random_sentence
 
 from sqlalchemy import create_engine, text, URL
 
@@ -52,15 +54,28 @@ async def upload(email: Annotated[str, Form()], password: Annotated[str, Form()]
     return {"status": "success"}
 
 
+
+
 # This will check whether that email is in the db or not.
+class Email(BaseModel):
+    email:Annotated[str, "Email to validate"]
+
 @app.post("/validateEmail/")
-async def validateEmail(email: Annotated[str, "Email to validate"]):
+async def validateEmail(Email:Email):
 
     # Retrieving the record from that eamil.
     # if we get the email record from the db, return succes and three random sentences
     # else return fail and no sentences
 
-    return {'status': "success"}
+    with engine.connect() as conn:
+        result = conn.execute(text("SELECT id FROM user_data WHERE email_id=:email_id"),[{"email_id":Email.email}])
+
+        if(len(result.all())):
+            sentence = generate_random_sentence()
+
+            return {'status':'success', 'sentence':sentence}
+
+    return {'status': "fail"}
 
 
 # This is for the validation of the user
