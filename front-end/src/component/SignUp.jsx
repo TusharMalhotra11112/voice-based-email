@@ -76,9 +76,9 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
       if(signUpNo === 0){
         const value = document.getElementsByClassName("dummy")[0].value
         handelSignUpNo(-1)
-        say(`is your Email Id ${value}? Say yes or no`,4000)
+        say(`is your Email Id ${value}? Say yes or no`,6000)
         .then(()=>{
-          listen(3000)
+          listen(5000)
           .then((text)=>{
             setTimeout(()=>{
               if(text === "Yes." || text === "Yes" || text === "yes"){
@@ -86,9 +86,12 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
                 handelSignUpNo(0)
                 res('')
               }
-              else{
+              else if(text === "No." || text === "No" || text === "no"){
                 console.log(`rejected :${text}`)
                 rej('')
+              }
+              else{
+
               }
             },1000)
           })
@@ -97,9 +100,9 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
       else if(signUpNo === 1){
         const value = document.getElementsByClassName("loginPassword")[0].children[1].firstChild.value
         handelSignUpNo(-1)
-        say(`is your Password ${value}? Say yes or no`,4000)
+        say(`is your Password ${value}? Say yes or no`,6000)
         .then(()=>{
-          listen(3000)
+          listen(5000)
           .then((text)=>{
             setTimeout(()=>{
               if(text === "Yes." || text === "Yes" || text === "yes"){
@@ -117,9 +120,9 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
       }
       else if(signUpNo === 2){
         handelSignUpNo(-1)
-        say(`would you like to repeate the sentence-1? say yes or No`,5000)
+        say(`would you like to repeate the sentence-1? say yes or No`,6000)
         .then(()=>{
-          listen(3000)
+          listen(5000)
           .then((text)=>{
             setTimeout(()=>{
               if(text === "No." || text === "no" || text === "No"){
@@ -137,9 +140,9 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
       }
       else if(signUpNo === 3){
         handelSignUpNo(-1)
-        say(`would you like to repeate the sentence-2? say yes or No`,5000)
+        say(`would you like to repeate the sentence-2? say yes or No`,6000)
         .then(()=>{
-          listen(3000)
+          listen(5000)
           .then((text)=>{
             setTimeout(()=>{
               if(text === "No." || text === "No" || text === "no"){
@@ -157,9 +160,9 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
       }
       else if(signUpNo === 4){
         handelSignUpNo(-1)
-        say(`would you like to repeate the sentence-3? say yes or No`,5000)
+        say(`would you like to repeate the sentence-3? say yes or No`,6000)
         .then(()=>{
-          listen(3000)
+          listen(5000)
           .then((text)=>{
             setTimeout(()=>{
               if(text === "No." || text === "No" || text === "no"){
