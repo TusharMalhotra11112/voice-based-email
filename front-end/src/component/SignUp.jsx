@@ -19,8 +19,8 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
   
   const [number,setNumber] = useState(0)
 
-  const [email,setEmail] = useState("email")
-  const [pass,setPass] = useState("pass")
+  const [email,setEmail] = useState("")
+  const [pass,setPass] = useState("")
   const [transcriptText,setTranscriptText] = useState("")
   const [voiceSample,setVoiceSample] = useState([])
   const [voiceNumber,setVoiceNumber] = useState(0)

@@ -168,7 +168,11 @@ export default function Login({logInNo,handleLoginNo}) {
   }
 
   const manageLogIn = ()=>{
-    console.log(`Email:${email} Voice: ${voiceData}`)
+    // console.log(`Email:${email} Voice: ${voiceData}`)
+    var formData = new FormData()
+    formData.append("email",email)
+    formData.append("file",voiceData)
+    axios.post("http://localhost:8000/validateEmail",formData)
   }
 
   const addAudioElement = (blob)=>{
