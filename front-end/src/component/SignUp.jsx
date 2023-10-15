@@ -181,9 +181,9 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
   const manageEmail = ()=>{
     return new Promise((res,rej)=>{
       if(signUpNo===0){
-        say("please Say your Email Id",4000)
+        say("please Say your Email Id",6000)
         .then(()=>{
-          listen(5000)
+          listen(6000)
           .then(()=>{
             manageYesorNo()
             .then(()=>{
@@ -207,9 +207,9 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
   const managePass = ()=>{
     return new Promise((res,rej)=>{
       if(signUpNo===1){
-        say("please Say your password",3000)
+        say("please Say your password",6000)
         .then(()=>{
-          listen(5000)
+          listen(6000)
           .then(()=>{
             manageYesorNo()
             .then(()=>{
@@ -233,7 +233,7 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
   const manageSentence1 =()=>{
     return new Promise((res,rej)=>{
       if(signUpNo===2){
-        say(sentence1,4000)
+        say(sentence1,6000)
         .then(()=>{
           setNumber(1)
           listen(5000)
@@ -261,7 +261,7 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
   const manageSentence2 =()=>{
     return new Promise((res,rej)=>{
       if(signUpNo===3){
-        say(sentence2,4000)
+        say(sentence2,6000)
         .then(()=>{
           setNumber(1)
           listen(5000)
@@ -289,7 +289,7 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
   const manageSentence3 =()=>{
     return new Promise((res,rej)=>{
       if(signUpNo===4){
-        say(sentence3,4000)
+        say(sentence3,6000)
         .then(()=>{
           setNumber(1)
           listen(5000)
@@ -323,7 +323,7 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
 
   useEffect(()=>{
     if(signUpNo === -1){
-      say("Hello welcome to the Sign-Up page",3000)
+      say("Hello welcome to the Sign-Up page",5000)
     }
     else if(signUpNo === 0){
       manageEmail()
