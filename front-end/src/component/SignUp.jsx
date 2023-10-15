@@ -86,12 +86,9 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
                 handelSignUpNo(0)
                 res('')
               }
-              else if(text === "No." || text === "No" || text === "no"){
+              else{
                 console.log(`rejected :${text}`)
                 rej('')
-              }
-              else{
-
               }
             },1000)
           })
