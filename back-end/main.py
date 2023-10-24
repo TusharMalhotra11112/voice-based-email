@@ -1,6 +1,6 @@
 from fastapi import FastAPI, File, UploadFile, Form
 from typing_extensions import Annotated
-from typing import List
+from typing import List, Union
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from utils import generate_random_sentence
@@ -54,7 +54,18 @@ async def upload(email: Annotated[str, Form()], password: Annotated[str, Form()]
     return {"status": "success"}
 
 
+# This will do the login with email and a voice sample
+@app.post("/login/")
+async def login(email: Annotated[str, Form()], file: UploadFile):
+    with engine.connect() as conn:
+        result = conn.execute(text("SELECT id FROM user_data WHERE email_id=:email_id"), [{"email_id":email}])
 
+        if(len(result.all())==0):
+            return {"status":"fail"}
+        
+        # then we need to work with the audio sample for the final validation.
+    
+    return {"status":"success"}
 
 # This will check whether that email is in the db or not.
 class Email(BaseModel):
