@@ -60,6 +60,9 @@ async def login(email: Annotated[str, Form()], file: UploadFile):
     with engine.connect() as conn:
         result = conn.execute(text("SELECT id FROM user_data WHERE email_id=:email_id"), [{"email_id":email}])
 
+        # audio check
+        audioData = file.file.read() #binary data
+
         if(len(result.all())==0):
             return {"status":"fail"}
         
