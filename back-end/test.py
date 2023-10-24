@@ -1,13 +1,22 @@
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine, text, URL
 
 
-engine = create_engine("mysql+pymysql://root:1234@localhost:3306/voicebaseddata")
-# INSERT INTO user_data (email_id, password, audio_1, audio_2, audio_3) VALUES ('hello@gmail.com', '1234', 'sfhsh33',
-#  'sdfsf3', 'sfasigh3')
+password_file = open("password.txt", "r")
+password = password_file.readline()
 
-with engine.connect() as conn:
-    # result = conn.execute("insert into user_data (email_id, password, audio_sections[0], audio_sections[1], audio_sections[2] values()")
-    result = conn.execute(text("INSERT INTO user_data (email_id, password, audio_1,audio_2, audio_3) VALUES (:email_id,:password, :audio_1, :audio_2, :audio_3)"),
-                          [{"email_id": 'new@proton', "password": '5612', "audio_1": "padls","audio_2": "mklsa", "audio_3":"dkl93k"}],)
-    conn.commit()
-    # print(result.all())
+engine = create_engine(password)
+
+
+# function to create sample.wav file from the database. 
+def createWavFile():
+    with engine.connect() as conn:
+        result = conn.execute(text("SELECT audio_1 FROM user_data WHERE id = 1"))
+        
+        if(result.all()):
+            audioBinary = result.all()[0][0]
+            file = open("sample.wav", "wb")
+            file.write(audioBinary)
+        else:
+            print("No data found")
+    
+createWavFile()
