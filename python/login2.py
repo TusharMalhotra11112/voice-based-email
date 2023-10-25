@@ -35,9 +35,9 @@ class VoiceloginSystem:
         self.conn = mysql.connector.connect(
             host='localhost',  # Replace with your MySQL host
             user='root',  # Replace with your MySQL username
-            password='Sam@9818',  # Replace with your MySQL password
-            database='mail_db',
-            port='3306'  # Replace with your MySQL database name
+            password='1234',  # Replace with your MySQL password
+            database='voicebaseddata', # Replace with your MySQL database name
+            port='3306'  
         )
         self.cursor = self.conn.cursor()
 

@@ -15,7 +15,9 @@ def createWavFile():
         data = result.all()
 
         if(len(data)):
+            
             audioBinary = data[0][0]
+            print(audioBinary)
             file = open("sample.wav", "wb")
             file.write(audioBinary)
         else:
