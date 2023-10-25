@@ -25,10 +25,6 @@
     pip install pymysql
 ```
 
-```bash
-    pip install "uvicorn[standard]"
-```
-
 ### Note
 
 - Use python virtual environment to run this project. (optional)
