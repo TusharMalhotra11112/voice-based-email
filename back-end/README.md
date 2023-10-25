@@ -5,6 +5,7 @@
 1. python
 2. fastapi
 3. pymysql
+4. sqlalchemy
 
 ## To install the required packages.
 
@@ -22,10 +23,6 @@
 
 ```bash
     pip install pymysql
-```
-
-```bash
-    pip install "uvicorn[standard]"
 ```
 
 ### Note
