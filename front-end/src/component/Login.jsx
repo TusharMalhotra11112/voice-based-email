@@ -172,7 +172,7 @@ export default function Login({logInNo,handleLoginNo}) {
     var formData = new FormData()
     formData.append("email",email)
     formData.append("file",voiceData)
-    axios.post("http://localhost:8000/validateEmail",formData)
+    axios.post("http://localhost:8000/login/",formData)
   }
 
   const addAudioElement = (blob)=>{

@@ -30,16 +30,23 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
   const sentence2 = 'Please say this email system is voice-based'
   const sentence3 = 'Please say I am signing in this system'
 
-
-
   const say = (text,duration)=>{
     return new Promise((res,rej)=>{
       if(signUpNo === -1){
         handelSignUpNo(0)
         fire++;
       }
-      console.log(`saying: ${text}`)
       const synth = window.speechSynthesis;
+      // const voices = synth.getVoices()
+      // const voice = ()=>{
+      //     for(let i= 0;i<voices.length;i++){
+      //       if(voices[i].name === 'Microsoft David - English (United States)')
+      //       return voices[i];
+      //     }
+      //     return voices[0];
+      // }
+      // const corrvoice = voice()
+      console.log(`saying: ${text}`)
       const u = new SpeechSynthesisUtterance(text)
       synth.speak(u)
       setTimeout(()=>{
@@ -187,6 +194,14 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
           .then(()=>{
             manageYesorNo()
             .then(()=>{
+              setEmail((email)=>{
+                let text = email
+                text = text.replace("at the rate","@")
+                text = text.replace("at the date","@")
+                text = text.replace("@ the rate","@")
+                text = text.replace(" ","")
+                return text
+            })
               handelSignUpNo(1)
               fire++
               res('')
@@ -397,10 +412,20 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
     setVoiceData(recorderControls.recordingBlob)
   },[recorderControls.recordingBlob])
 
-
   const sendData =()=>{
 
     var formData = new FormData()
+    let text = email
+    text = text.replace("at the rate","@")
+    text = text.replace("at the date","@")
+    text = text.replace("@ the rate","@")
+    text = text.replace(" ","")
+    setEmail(text)
+    text = pass
+    text = text.replace(" ","")
+    text = text.replace(".","")
+    setPass(text)
+
     console.log(`email:${email} password:${pass} file1${voiceSample[0]} file2${voiceSample[1]} file3${voiceSample[2]}`)
     try{
       formData.append("email",email)
