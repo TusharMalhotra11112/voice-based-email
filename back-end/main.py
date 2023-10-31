@@ -4,6 +4,10 @@ from typing import List, Union
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from utils import generate_random_sentence
+import os
+import time
+
+from voiceRecog import voiceRecognition
 
 from sqlalchemy import create_engine, text, URL
 
@@ -58,41 +62,42 @@ async def upload(email: Annotated[str, Form()], password: Annotated[str, Form()]
 @app.post("/login/")
 async def login(email: Annotated[str, Form()], file: UploadFile):
     with engine.connect() as conn:
-        result = conn.execute(text("SELECT id FROM user_data WHERE email_id=:email_id"), [{"email_id":email}])
+        result = conn.execute(text("SELECT id, audio_1, audio_2, audio_3, password FROM user_data WHERE email_id=:email_id"), [{"email_id":email}])
 
-        # audio check
-        audioData = file.file.read() #binary data
+        # checking for the uploads folder
+        if(os.path.isdir("uploads")==False):
+            print("uploads folder not found...")
+            print("Creating uploads folder")
+            os.mkdir("uploads") # creating uploads folder
 
-        if(len(result.all())==0):
+        # getting the first row
+        data_rows = result.all()
+
+        # checking whether the data is present or not
+        if(len(data_rows)==0):
             return {"status":"fail"}
+
+        # array for file names
+        file_names = ["sample_audio_", "audio_1_", "audio_2_", "audio_3_"]
+
+        # making the file names unique with time library
+        for i in range(len(file_names)):
+            file_names[i] = "uploads/" + file_names[i] + str(time.time()).split('.')[0] + ".wav"
+
+        # writing data in each file in the 'uploads' folder
+        for i in range(len(file_names)):
+            f = open(file_names[i], "wb")
+            if(i==0):
+                f.write(file.file.read())
+            else:
+                f.write(data_rows[0][i])
+
         
-        # then we need to work with the audio sample for the final validation.
+        # then we need to work with the audio sample for the final validation with ML
+        if(voiceRecognition(file_names[1:], file_names[0])):
+            return {
+                "status":"success",
+                "password": data_rows[0][4]
+                }
     
-    return {"status":"success"}
-
-# This will check whether that email is in the db or not.
-class Email(BaseModel):
-    email:Annotated[str, "Email to validate"]
-
-@app.post("/validateEmail/")
-async def validateEmail(Email:Email):
-
-    # Retrieving the record from that eamil.
-    # if we get the email record from the db, return succes and three random sentences
-    # else return fail and no sentences
-
-    with engine.connect() as conn:
-        result = conn.execute(text("SELECT id FROM user_data WHERE email_id=:email_id"),[{"email_id":Email.email}])
-
-        if(len(result.all())):
-            sentence = generate_random_sentence()
-
-            return {'status':'success', 'sentence':sentence}
-
-    return {'status': "fail"}
-
-
-# This is for the validation of the user
-@app.post("/validateUser/")
-async def validateUser(files: Annotated[List[UploadFile], File(description="Multiple wav files to upload, for user validation")]):
-    return {'status': "success"}
+    return {"status":"fails"}
