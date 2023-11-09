@@ -2,6 +2,7 @@ import librosa
 import numpy as np
 from fastdtw import fastdtw
 import matplotlib.pyplot as plt
+from typing import List
 
 def extract_mfcc(audio_file):
     audio, sample_rate = librosa.load(audio_file)
@@ -28,7 +29,7 @@ True (if the voice matches)
 False (if the voice does not match)
 '''
 
-def voiceRecognition(db_audio_paths, sample_audio_path):
+def voiceRecognition(db_audio_paths: List[str], sample_audio_path:str)->bool:
     
     # checking the length of the audio_files 
     if(len(db_audio_paths)!=3):

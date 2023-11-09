@@ -65,7 +65,7 @@ const AudioRecorder = () => {
       // getBuffer(audioBlob);
 
       let formData = new FormData();
-      formData.append("email", "hello@gmail.com");
+      formData.append("email", "testmail@gmail.com");
       formData.append("file", audioBlob, "file1.wav");
       // formData.append("password", "password123");
       // formData.append("files", audioBlob, "file1.wav");
