@@ -76,7 +76,7 @@ export default function Login({logInNo,handleLoginNo}) {
       if(logInNo === 0){
         const value = document.getElementsByClassName("dummy")[0].value
         handleLoginNo(-1)
-        say(`is your Email Id ${value}? Say yes or no`,4000)
+        say(`is your Email Id ${value}? Say yes or no`,5000)
         .then(()=>{
           listen(3000)
           .then((text)=>{
@@ -121,7 +121,7 @@ export default function Login({logInNo,handleLoginNo}) {
   const manageEmail = ()=>{
     return new Promise((res,rej)=>{
       if(logInNo===0){
-        say("Please,Enter Your Email Id",4000)
+        say("Please,Enter Your Email Id",5000)
         .then(()=>{
           listen(5000)
           .then(()=>{
@@ -168,28 +168,40 @@ export default function Login({logInNo,handleLoginNo}) {
   }
 
   const manageLogIn = ()=>{
+    return new Promise((res,rej)=>{
+      let text = email
+      if(text[text.length - 1] === "."){
+        text = text.slice(0,text.length - 1)
+      }
+      text = text.replace("at the rate","@")
+      text = text.replace("at the date","@")
+      text = text.replace("@ the rate","@")
+      text = text.replace(" ","")
+      text = text.toLowerCase()
+      
+      console.log(text)
+      setEmail(text)
+      handleLoginNo(3)
+      fire++
+      res('')
+    })
+  }
+  
+  const send = ()=>{
     var formData = new FormData()
-    let text = email
-    text = text.replace("at the rate","@")
-    text = text.replace("at the date","@")
-    text = text.replace("@ the rate","@")
-    text = text.replace(" ","")
-    text = text.slice(0,-1)
-    setEmail(text)
     formData.append("email",email)
     formData.append("file",voiceData)
     console.log(`Email:${email} Voice: ${voiceData}`)
     axios.post("http://localhost:8000/login/",formData)
     .then((data)=>{console.log(data)})
   }
-
   const addAudioElement = (blob)=>{
     setBlob(blob)
   }
 
   useEffect(()=>{
     if(logInNo === -1){
-      say("hello welcome to the login Page",3000)
+      say("hello welcome to the login Page",4000)
     }
     else if(logInNo === 0){
       manageEmail()
@@ -199,6 +211,9 @@ export default function Login({logInNo,handleLoginNo}) {
     }
     else if(logInNo === 2){
       manageLogIn()
+    }
+    else if(logInNo === 3){
+      send()
     }
   },[fire])
 

@@ -16,8 +16,8 @@ export default function LandingPage() {
   return (
     <div className='loginPage'>
         <img src="loginbg.jpg" alt="loginbg" className='loginBg'/>
-        <Login logInNo={logInNo} handleLoginNo={handleLoginNo} />
-        {/* <SignUp signUpNo={signUpNo} handelSignUpNo={handelSignUpNo} /> */}
+        {/* <Login logInNo={logInNo} handleLoginNo={handleLoginNo} /> */}
+        <SignUp signUpNo={signUpNo} handelSignUpNo={handelSignUpNo} />
         {/* <VoiceRec/> */}
     </div>
   )

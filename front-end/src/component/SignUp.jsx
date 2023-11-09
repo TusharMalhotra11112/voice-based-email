@@ -366,6 +366,9 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
         fire++
       }
     }
+    else if(signUpNo === 6){
+      send()
+    }
   },[fire])
 
   useEffect(()=>{
@@ -413,30 +416,37 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
   },[recorderControls.recordingBlob])
 
   const sendData =()=>{
+    return new Promise((res,rej)=>{
+      let text = email
+      if(text[text.length - 1] === "."){
+        text = text.slice(0,text.length - 1)
+      }
+      text = text.replace("at the rate","@")
+      text = text.replace("at the date","@")
+      text = text.replace("@ the rate","@")
+      text = text.replace(" ","")
+      text = text.toLowerCase()
+      setEmail(text)
+      text = pass
+      text = text.replace(" ","")
+      text = text.replace(".","")
+      text = text.toLowerCase()
+      setPass(text)
+      handelSignUpNo(6)
+      fire++
+      res('')
+  })
 
-    var formData = new FormData()
-    let text = email
-    text = text.replace("at the rate","@")
-    text = text.replace("at the date","@")
-    text = text.replace("@ the rate","@")
-    text = text.replace(" ","")
-    setEmail(text)
-    text = pass
-    text = text.replace(" ","")
-    text = text.replace(".","")
-    setPass(text)
-
+    
+  }
+  const send = ()=>{
     console.log(`email:${email} password:${pass} file1${voiceSample[0]} file2${voiceSample[1]} file3${voiceSample[2]}`)
-    try{
-      formData.append("email",email)
-      formData.append("password",pass)
-      formData.append("files", voiceSample[0], "file1.wav")
-      formData.append("files", voiceSample[1], "file2.wav")
-      formData.append("files", voiceSample[2], "file3.wav")
-    }
-    catch{
-      console.log("data error happened")
-    }
+    var formData = new FormData()
+    formData.append("email",email)
+    formData.append("password",pass)
+    formData.append("files", voiceSample[0], "file1.wav")
+    formData.append("files", voiceSample[1], "file2.wav")
+    formData.append("files", voiceSample[2], "file3.wav")
     axios.post("http://localhost:8000/register/",formData)
     .then((data)=>console.log(data))
     .catch((err)=>console.log(err))
