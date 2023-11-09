@@ -60,6 +60,7 @@ async def upload(email: Annotated[str, Form()], password: Annotated[str, Form()]
 # This will do the login with email and a voice sample
 @app.post("/login/")
 async def login(email: Annotated[str, Form()], file: UploadFile):
+
     with engine.connect() as conn:
         result = conn.execute(text("SELECT id, audio_1, audio_2, audio_3, password FROM user_data WHERE email_id=:email_id"), [{"email_id":email}])
 
@@ -73,9 +74,9 @@ async def login(email: Annotated[str, Form()], file: UploadFile):
         data_rows = result.all()
 
         # checking whether the data is present or not
+        print(data_rows)
         if(len(data_rows)==0):
             return {"status":"fail"}
-
         # array for file names
         file_names = ["sample_audio_", "audio_1_", "audio_2_", "audio_3_"]
 
@@ -91,7 +92,6 @@ async def login(email: Annotated[str, Form()], file: UploadFile):
             else:
                 f.write(data_rows[0][i])
 
-        
         # then we need to work with the audio sample for the final validation with ML
         if(voiceRecognition(file_names[1:], file_names[0])):
             return {
