@@ -78,4 +78,33 @@ body{
 .dummy{
     display: none;
 }
+.homePage{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    height: 100vh;
+    gap: 5vh;
+}
 
+.homePageText{
+    font-size: 3.5rem;
+    font: bolder;
+    color: red;
+}
+
+.homePageContainer{
+    background-color: rgba(255,255,255,0.3);
+    /* border: black solid 0px; */
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    padding: 10vw;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.homePageContainer>*{
+    width: 20vw;
+    height: 10vh;
+    
+}
