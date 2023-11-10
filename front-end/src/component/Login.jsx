@@ -3,16 +3,16 @@ import React, { useEffect, useState } from 'react'
 import SpeechRecognition,{useSpeechRecognition} from 'react-speech-recognition';
 import axios from 'axios'
 import { AudioRecorder, useAudioRecorder} from "react-audio-voice-recorder";
+import { useNavigate } from 'react-router-dom';
 
 let fire = 0;
-export default function Login({logInNo,handleLoginNo}) {
+export default function Login({ no , handleNo }) {
   const {
     transcript,
     listening,
     resetTranscript,
     browserSupportsSpeechRecognition
   } = useSpeechRecognition();
-
   const recorderControls = useAudioRecorder()
   
   const [transcriptText,setTranscriptText] = useState("")
@@ -21,6 +21,8 @@ export default function Login({logInNo,handleLoginNo}) {
   const [blob,setBlob] = useState()
   const [number,setNumber] = useState(0)
   const [voiceNumber,setVoiceNumber] = useState(0)
+
+  const nav = useNavigate()
 
   const nouns = ['cat', 'dog', 'house', 'car', 'tree']
   const verbs = ['runs', 'jumps', 'sleeps', 'eats', 'drives']
@@ -38,8 +40,8 @@ export default function Login({logInNo,handleLoginNo}) {
 
   const say = (text,duration)=>{
     return new Promise((res,rej)=>{
-      if(logInNo === -1){
-        handleLoginNo(0)
+      if(no === -1){
+        handleNo(0)
         fire++;
       }
       console.log(`saying: ${text}`)
@@ -73,9 +75,9 @@ export default function Login({logInNo,handleLoginNo}) {
 
   const manageYesorNo=()=>{
     return new Promise((res,rej)=>{
-      if(logInNo === 0){
+      if(no === 0){
         const value = document.getElementsByClassName("dummy")[0].value
-        handleLoginNo(-1)
+        handleNo(-1)
         say(`is your Email Id ${value}? Say yes or no`,5000)
         .then(()=>{
           listen(3000)
@@ -83,7 +85,7 @@ export default function Login({logInNo,handleLoginNo}) {
             setTimeout(()=>{
               if(text === "Yes." || text === "Yes" || text === "yes"){
                 console.log(`accepted : ${text}`)
-                handleLoginNo(0)
+                handleNo(0)
                 res('')
               }
               else{
@@ -94,8 +96,8 @@ export default function Login({logInNo,handleLoginNo}) {
           })
         })
       }
-      else if(logInNo === 1){
-        handleLoginNo(-1)
+      else if(no === 1){
+        handleNo(-1)
         say(`would you like to repeate the sentence? say yes or No`,5000)
         .then(()=>{
           listen(3000)
@@ -103,7 +105,7 @@ export default function Login({logInNo,handleLoginNo}) {
             setTimeout(()=>{
               if(text === "No." || text === "no" || text === "No"){
                 console.log(`accepted : ${text}`)
-                handleLoginNo(1)
+                handleNo(1)
                 res('')
               }
               else{
@@ -120,19 +122,19 @@ export default function Login({logInNo,handleLoginNo}) {
 
   const manageEmail = ()=>{
     return new Promise((res,rej)=>{
-      if(logInNo===0){
+      if(no===0){
         say("Please,Enter Your Email Id",5000)
         .then(()=>{
           listen(5000)
           .then(()=>{
             manageYesorNo()
             .then(()=>{
-              handleLoginNo(1)
+              handleNo(1)
               fire++
               res('')
             })
             .catch(()=>{
-              handleLoginNo(0)
+              handleNo(0)
               fire++
             })
           })
@@ -143,7 +145,7 @@ export default function Login({logInNo,handleLoginNo}) {
 
   const manageVoice = ()=>{
     return new Promise((res,rej)=>{
-      if(logInNo===1){
+      if(no===1){
         say(`Please Say,${fetchSentence()}`,4000)
         .then(()=>{
           setNumber(1)
@@ -153,12 +155,12 @@ export default function Login({logInNo,handleLoginNo}) {
             manageYesorNo()
             .then(()=>{
               setVoiceNumber(1)
-              handleLoginNo(2)
+              handleNo(2)
               fire++
               res('')
             })
             .catch(()=>{
-              handleLoginNo(1)
+              handleNo(1)
               fire++
             })
           })
@@ -181,7 +183,7 @@ export default function Login({logInNo,handleLoginNo}) {
       
       console.log(text)
       setEmail(text)
-      handleLoginNo(3)
+      handleNo(3)
       fire++
       res('')
     })
@@ -193,26 +195,34 @@ export default function Login({logInNo,handleLoginNo}) {
     formData.append("file",voiceData)
     console.log(`Email:${email} Voice: ${voiceData}`)
     axios.post("http://localhost:8000/login/",formData)
-    .then((data)=>{console.log(data)})
+    .then((data)=>{
+      console.log(data)
+      handleNo(-1)
+      nav('../homepage')
+    })
+    .catch((err)=>{
+      console.log(err)
+
+    })
   }
   const addAudioElement = (blob)=>{
     setBlob(blob)
   }
 
   useEffect(()=>{
-    if(logInNo === -1){
+    if(no === -1){
       say("hello welcome to the login Page",4000)
     }
-    else if(logInNo === 0){
+    else if(no === 0){
       manageEmail()
     }
-    else if(logInNo === 1){
+    else if(no === 1){
       manageVoice()
     }
-    else if(logInNo === 2){
+    else if(no === 2){
       manageLogIn()
     }
-    else if(logInNo === 3){
+    else if(no === 3){
       send()
     }
   },[fire])
@@ -220,7 +230,7 @@ export default function Login({logInNo,handleLoginNo}) {
   useEffect(()=>{
     console.log(`transcript:${transcript}`)
     setTranscriptText(transcript)
-    if(logInNo === 0){
+    if(no === 0){
       setEmail(transcript)
     }
   },[transcript])  

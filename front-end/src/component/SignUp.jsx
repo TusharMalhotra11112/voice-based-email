@@ -3,17 +3,18 @@ import React, { useEffect, useState } from 'react'
 import SpeechRecognition,{useSpeechRecognition} from 'react-speech-recognition';
 import axios from 'axios'
 import { AudioRecorder, useAudioRecorder} from "react-audio-voice-recorder";
+import { useNavigate } from 'react-router-dom';
 
 
 let fire = 0;
-export default function SignUp({signUpNo,handelSignUpNo}) {
+export default function SignUp({no,handleNo}) {
   const {
     transcript,
     listening,
     resetTranscript,
     browserSupportsSpeechRecognition
   } = useSpeechRecognition();
-  
+  const nav = useNavigate()
   
   const recorderControls = useAudioRecorder()
   
@@ -32,20 +33,11 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
 
   const say = (text,duration)=>{
     return new Promise((res,rej)=>{
-      if(signUpNo === -1){
-        handelSignUpNo(0)
+      if(no === -1){
+        handleNo(0)
         fire++;
       }
       const synth = window.speechSynthesis;
-      // const voices = synth.getVoices()
-      // const voice = ()=>{
-      //     for(let i= 0;i<voices.length;i++){
-      //       if(voices[i].name === 'Microsoft David - English (United States)')
-      //       return voices[i];
-      //     }
-      //     return voices[0];
-      // }
-      // const corrvoice = voice()
       console.log(`saying: ${text}`)
       const u = new SpeechSynthesisUtterance(text)
       synth.speak(u)
@@ -64,7 +56,7 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
       resetTranscript()
       say("now",0)
       .then(()=>{
-        if(signUpNo === 2){
+        if(no === 2){
           console.log(document.getElementsByClassName("firstsentence")[0])
           
         }
@@ -80,9 +72,9 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
 
   const manageYesorNo=()=>{
     return new Promise((res,rej)=>{
-      if(signUpNo === 0){
+      if(no === 0){
         const value = document.getElementsByClassName("dummy")[0].value
-        handelSignUpNo(-1)
+        handleNo(-1)
         say(`is your Email Id ${value}? Say yes or no`,6000)
         .then(()=>{
           listen(5000)
@@ -90,7 +82,7 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
             setTimeout(()=>{
               if(text === "Yes." || text === "Yes" || text === "yes"){
                 console.log(`accepted : ${text}`)
-                handelSignUpNo(0)
+                handleNo(0)
                 res('')
               }
               else{
@@ -101,9 +93,9 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
           })
         })
       }
-      else if(signUpNo === 1){
+      else if(no === 1){
         const value = document.getElementsByClassName("loginPassword")[0].children[1].firstChild.value
-        handelSignUpNo(-1)
+        handleNo(-1)
         say(`is your Password ${value}? Say yes or no`,6000)
         .then(()=>{
           listen(5000)
@@ -111,7 +103,7 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
             setTimeout(()=>{
               if(text === "Yes." || text === "Yes" || text === "yes"){
                 console.log(`accepted : ${text}`)
-                handelSignUpNo(1)
+                handleNo(1)
                 res('')
               }
               else{
@@ -122,8 +114,8 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
           })
         })
       }
-      else if(signUpNo === 2){
-        handelSignUpNo(-1)
+      else if(no === 2){
+        handleNo(-1)
         say(`would you like to repeate the sentence-1? say yes or No`,6000)
         .then(()=>{
           listen(5000)
@@ -131,7 +123,7 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
             setTimeout(()=>{
               if(text === "No." || text === "no" || text === "No"){
                 console.log(`accepted : ${text}`)
-                handelSignUpNo(2)
+                handleNo(2)
                 res('')
               }
               else{
@@ -142,8 +134,8 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
           })
         })
       }
-      else if(signUpNo === 3){
-        handelSignUpNo(-1)
+      else if(no === 3){
+        handleNo(-1)
         say(`would you like to repeate the sentence-2? say yes or No`,6000)
         .then(()=>{
           listen(5000)
@@ -151,7 +143,7 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
             setTimeout(()=>{
               if(text === "No." || text === "No" || text === "no"){
                 console.log(`accepted : ${text}`)
-                handelSignUpNo(3)
+                handleNo(3)
                 res('')
               }
               else{
@@ -162,8 +154,8 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
           })
         })
       }
-      else if(signUpNo === 4){
-        handelSignUpNo(-1)
+      else if(no === 4){
+        handleNo(-1)
         say(`would you like to repeate the sentence-3? say yes or No`,6000)
         .then(()=>{
           listen(5000)
@@ -171,7 +163,7 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
             setTimeout(()=>{
               if(text === "No." || text === "No" || text === "no"){
                 console.log(`accepted : ${text}`)
-                handelSignUpNo(4)
+                handleNo(4)
                 res('')
               }
               else{
@@ -187,7 +179,7 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
 
   const manageEmail = ()=>{
     return new Promise((res,rej)=>{
-      if(signUpNo===0){
+      if(no===0){
         say("please Say your Email Id",6000)
         .then(()=>{
           listen(6000)
@@ -202,12 +194,12 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
                 text = text.replace(" ","")
                 return text
             })
-              handelSignUpNo(1)
+              handleNo(1)
               fire++
               res('')
             })
             .catch(()=>{
-              handelSignUpNo(0)
+              handleNo(0)
               fire++;
             })
           })
@@ -221,7 +213,7 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
 
   const managePass = ()=>{
     return new Promise((res,rej)=>{
-      if(signUpNo===1){
+      if(no===1){
         say("please Say your password",6000)
         .then(()=>{
           listen(6000)
@@ -229,11 +221,11 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
             manageYesorNo()
             .then(()=>{
               fire++
-              handelSignUpNo(2)
+              handleNo(2)
               res('')
             })
             .catch(()=>{
-              handelSignUpNo(1)
+              handleNo(1)
               fire++
             })
           })
@@ -247,7 +239,7 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
 
   const manageSentence1 =()=>{
     return new Promise((res,rej)=>{
-      if(signUpNo===2){
+      if(no===2){
         say(sentence1,6000)
         .then(()=>{
           setNumber(1)
@@ -257,12 +249,12 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
             manageYesorNo()
             .then(()=>{
               setVoiceNumber(1)
-              handelSignUpNo(3)
+              handleNo(3)
               fire++
               res('')
             })
             .catch(()=>{
-              handelSignUpNo(2)
+              handleNo(2)
               fire++
             })
           })
@@ -275,7 +267,7 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
   }
   const manageSentence2 =()=>{
     return new Promise((res,rej)=>{
-      if(signUpNo===3){
+      if(no===3){
         say(sentence2,6000)
         .then(()=>{
           setNumber(1)
@@ -285,12 +277,12 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
             manageYesorNo()
             .then(()=>{
               setVoiceNumber(1)
-              handelSignUpNo(4)
+              handleNo(4)
               fire++
               res('')
             })
             .catch(()=>{
-              handelSignUpNo(3)
+              handleNo(3)
               fire++
             })
           })
@@ -303,7 +295,7 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
   }
   const manageSentence3 =()=>{
     return new Promise((res,rej)=>{
-      if(signUpNo===4){
+      if(no===4){
         say(sentence3,6000)
         .then(()=>{
           setNumber(1)
@@ -313,12 +305,12 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
             manageYesorNo()
             .then(()=>{
               setVoiceNumber(1)
-              handelSignUpNo(5)
+              handleNo(5)
               fire++
               res('')
             })
             .catch(()=>{
-              handelSignUpNo(4)
+              handleNo(4)
               fire++
             })
           })
@@ -337,25 +329,25 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
   }
 
   useEffect(()=>{
-    if(signUpNo === -1){
+    if(no === -1){
       say("Hello welcome to the Sign-Up page",5000)
     }
-    else if(signUpNo === 0){
+    else if(no === 0){
       manageEmail()
     }
-    else if(signUpNo === 1){
+    else if(no === 1){
       managePass()
     }
-    else if(signUpNo === 2){
+    else if(no === 2){
       manageSentence1()
     }
-    else if(signUpNo === 3){
+    else if(no === 3){
       manageSentence2()
     }
-    else if(signUpNo === 4){
+    else if(no === 4){
       manageSentence3()
     }
-    else if(signUpNo === 5){
+    else if(no === 5){
       if(voiceNumber===0){
         say("signing you in the website",5000)
         .then(()=>{
@@ -366,7 +358,7 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
         fire++
       }
     }
-    else if(signUpNo === 6){
+    else if(no === 6){
       send()
     }
   },[fire])
@@ -374,10 +366,10 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
   useEffect(()=>{
     console.log(`transcript:${transcript}`)
     setTranscriptText(transcript)
-    if(signUpNo === 0){
+    if(no === 0){
       setEmail(transcript)
     }
-    else if(signUpNo === 1){
+    else if(no === 1){
       setPass(transcript)
     }
   },[transcript])
@@ -432,7 +424,7 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
       text = text.replace(".","")
       text = text.toLowerCase()
       setPass(text)
-      handelSignUpNo(6)
+      handleNo(6)
       fire++
       res('')
   })
@@ -448,8 +440,14 @@ export default function SignUp({signUpNo,handelSignUpNo}) {
     formData.append("files", voiceSample[1], "file2.wav")
     formData.append("files", voiceSample[2], "file3.wav")
     axios.post("http://localhost:8000/register/",formData)
-    .then((data)=>console.log(data))
-    .catch((err)=>console.log(err))
+    .then((data)=>{
+      console.log(data)
+      handleNo(-1)
+      nav('../homepage')
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
   }
 
   

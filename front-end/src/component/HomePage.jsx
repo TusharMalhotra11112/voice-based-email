@@ -1,24 +1,25 @@
 import { Button, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-import axios from 'axios'
+import { useNavigate } from 'react-router-dom';
 
 let fire = 0
-export default function HomePage({ homePageno, handleHomePageNo }) {
+export default function HomePage({ no, handleNo }) {
   const {
     transcript,
     listening,
     resetTranscript,
     browserSupportsSpeechRecognition
   } = useSpeechRecognition();
+  const nav = useNavigate()
 
   const [transcriptText, setTranscriptText] = useState("")
 
 
   const say = (text, duration) => {
     return new Promise((res, rej) => {
-      if (homePageno === -1) {
-        handleHomePageNo(0)
+      if (no === -1) {
+        handleNo(0)
         fire++;
       }
       console.log(`saying: ${text}`)
@@ -51,15 +52,21 @@ export default function HomePage({ homePageno, handleHomePageNo }) {
 
   const manageCompose = ()=>{
     console.log(`navigating to compose`);
+    handleNo(-1)
+    nav('../compose')
   }
   
   const manageInbox = ()=>{
     console.log(`navigating to inbox`);
+    handleNo(-1)
+    nav('../inbox')
     
   }
   
   const manageLogOut = ()=>{
     console.log(`navigating to logout`);
+    handleNo(-1)
+    nav('../')
 
   }
 
@@ -73,6 +80,9 @@ export default function HomePage({ homePageno, handleHomePageNo }) {
       }
       else if(text === 'Logout' || text === 'Logout.' || text === 'logout' || text === 'Log out' || text === 'Log out.' || text === 'log out'){
         manageLogOut()
+      }
+      else{
+        fire++;
       }
     })
   }
@@ -98,10 +108,10 @@ export default function HomePage({ homePageno, handleHomePageNo }) {
   
 
   useEffect(() => {
-    if (homePageno === -1) {
+    if (no === -1) {
       say("you are on the HomePage please select one of the options", 5000)
     }
-    else if (homePageno === 0) {
+    else if (no === 0) {
       manageHomepage()
     }
   }, [fire])
