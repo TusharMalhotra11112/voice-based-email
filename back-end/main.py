@@ -6,10 +6,11 @@ from pydantic import BaseModel
 from utils import generate_random_sentence
 import os
 import time
+from sqlalchemy import create_engine, text, URL
 
 from voiceRecog import voiceRecognition
+from sendEmail import sendEmail
 
-from sqlalchemy import create_engine, text, URL
 
 
 # db_url format: mysql+pymysql://<db_user>:<password>@<host>/<db_name>
@@ -100,3 +101,38 @@ async def login(email: Annotated[str, Form()], file: UploadFile):
                 }
     
     return {"status":"fails"}
+
+
+# pydantic model for email
+class Email(BaseModel):
+    user_id: int
+    subject: str
+    text: str
+    receiver_email:str
+
+# This will send the email
+@app.post("/sendEmail/")
+async def sendingEmail(email: Email):
+
+    #verify the user
+    with engine.connect() as conn:
+        result = conn.execute(text("SELECT email_id, password FROM user_data WHERE id = :id"), 
+        [{"id": email.user_id}])
+
+        rows = result.all()
+
+        if(len(rows)==0):
+            return {"error":"User does not exists"}
+        
+        sender_email = rows[0][0]
+        sender_email_passwd = rows[0][1]
+
+        conn.close()
+    
+    # sending the email
+    has_email_sent = sendEmail(sender_email, sender_email_passwd, email.receiver_email, email.subject, email.text) 
+
+    if(has_email_sent):
+        return {"status":"success"}
+
+    return {"status":"fail"}
