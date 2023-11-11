@@ -3,7 +3,6 @@ from typing_extensions import Annotated
 from typing import List, Union
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from utils import generate_random_sentence
 import os
 import time
 from sqlalchemy import create_engine, text, URL
