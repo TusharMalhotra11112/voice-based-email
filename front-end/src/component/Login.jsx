@@ -181,7 +181,6 @@ export default function Login({ no , handleNo }) {
       text = text.replace(" ","")
       text = text.toLowerCase()
       
-      console.log(text)
       setEmail(text)
       handleNo(3)
       fire++

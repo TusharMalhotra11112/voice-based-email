@@ -60,7 +60,7 @@ async def upload(email: Annotated[str, Form()], password: Annotated[str, Form()]
 # This will do the login with email and a voice sample
 @app.post("/login/")
 async def login(email: Annotated[str, Form()], file: UploadFile):
-
+    print(UploadFile)
     with engine.connect() as conn:
         result = conn.execute(text("SELECT id, audio_1, audio_2, audio_3, password FROM user_data WHERE email_id=:email_id"), [{"email_id":email}])
 
@@ -74,7 +74,8 @@ async def login(email: Annotated[str, Form()], file: UploadFile):
         data_rows = result.all()
 
         # checking whether the data is present or not
-        print(data_rows)
+        # print(data_rows[0][1])
+
         if(len(data_rows)==0):
             return {"status":"fail"}
         # array for file names

@@ -431,6 +431,7 @@ export default function SignUp({no,handleNo}) {
 
     
   }
+  
   const send = ()=>{
     console.log(`email:${email} password:${pass} file1${voiceSample[0]} file2${voiceSample[1]} file3${voiceSample[2]}`)
     var formData = new FormData()
