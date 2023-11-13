@@ -74,8 +74,7 @@ async def login(email: Annotated[str, Form()], file: UploadFile):
         data_rows = result.all()
 
         # checking whether the data is present or not
-        # print(data_rows[0][1])
-
+        print(data_rows)
         if(len(data_rows)==0):
             return {"status":"fail"}
         # array for file names
@@ -99,6 +98,10 @@ async def login(email: Annotated[str, Form()], file: UploadFile):
                 "status":"success",
                 "password": data_rows[0][4]
                 }
+        
+        # clearing the audio files
+        for file_name in file_names:
+            os.remove(file_name)
     
     return {"status":"fails"}
 

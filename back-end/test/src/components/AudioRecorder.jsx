@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { Buffer } from "buffer";
-import fs from "fs";
+import audioBufferToWav from "audiobuffer-to-wav";
 
 const mimeType = "audio/wav";
 
@@ -54,30 +54,53 @@ const AudioRecorder = () => {
     mediaRecorder.current.onstop = () => {
       //creates a blob file from the audiochunks data
       const audioBlob = new Blob(audioChunks, { type: mimeType });
-      //creates a playable URL from the blob file.
-      const audioUrl = URL.createObjectURL(audioBlob);
-      setAudio(audioUrl);
 
-      console.log(audioChunks);
-      console.log(audioUrl);
       console.log(audioBlob);
 
-      // getBuffer(audioBlob);
+      const reader = new window.FileReader();
+      reader.readAsDataURL(audioBlob);
 
-      let formData = new FormData();
-      formData.append("email", "testmail@gmail.com");
-      formData.append("file", audioBlob, "file1.wav");
-      // formData.append("password", "password123");
-      // formData.append("files", audioBlob, "file1.wav");
-      // formData.append("files", audioBlob, "file2.wav");
-      // formData.append("files", audioBlob, "file3.wav");
+      reader.onloadend = () => {
+        let base64 = reader.result + "";
+        base64 = base64.split(",")[1];
+        const ab = new ArrayBuffer(base64.length);
+        const buff = new Buffer.from(base64, "base64");
+        const view = new Uint8Array(ab);
+        for (let i = 0; i < buff.length; ++i) {
+          view[i] = buff[i];
+        }
+        const context = new AudioContext();
+        context.decodeAudioData(ab, (buffer) => {
+          const wavfile = audioBufferToWav(buffer);
+          const blob = new window.Blob([new DataView(wavfile)], {
+            type: "audio/wav",
+          });
 
-      fetch("http://localhost:8000/login", {
-        method: "POST",
-        body: formData,
-      })
-        .then((data) => data.json())
-        .then((res) => console.log(res));
+          // const anchor = document.createElement("a");
+          // document.body.appendChild(anchor);
+          // anchor.style = "display: none";
+          // const url = window.URL.createObjectURL(blob);
+          // anchor.href = url;
+          // anchor.download = "audio.wav";
+          // anchor.click();
+          // window.URL.revokeObjectURL(url);
+
+          let formData = new FormData();
+          formData.append("email", "testmail@gmail.com");
+          // formData.append("password", "password123");
+          // formData.append("files", blob, "file1.wav");
+          // formData.append("files", blob, "file2.wav");
+          // formData.append("files", blob, "file3.wav");
+          formData.append("file", blob, "file1.wav");
+
+          fetch("http://localhost:8000/login", {
+            method: "POST",
+            body: formData,
+          })
+            .then((data) => data.json())
+            .then((res) => console.log(res));
+        });
+      };
 
       setAudioChunks([]);
     };
