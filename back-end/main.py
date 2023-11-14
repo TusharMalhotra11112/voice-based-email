@@ -99,8 +99,8 @@ async def login(email: Annotated[str, Form()], file: UploadFile):
                 }
         
         # clearing the audio files
-        # for file_name in file_names:
-        #     os.remove(file_name)
+        for file_name in file_names:
+            os.remove(file_name)
     
     return {"status":"fails"}
 
