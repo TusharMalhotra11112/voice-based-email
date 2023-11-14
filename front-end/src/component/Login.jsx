@@ -4,6 +4,9 @@ import SpeechRecognition,{useSpeechRecognition} from 'react-speech-recognition';
 import axios from 'axios'
 import { AudioRecorder, useAudioRecorder} from "react-audio-voice-recorder";
 import { useNavigate } from 'react-router-dom';
+import audioBufferToWav from "audiobuffer-to-wav";
+import { Buffer } from "buffer";
+
 
 let fire = 0;
 export default function Login({ no , handleNo }) {
@@ -18,7 +21,7 @@ export default function Login({ no , handleNo }) {
   const [transcriptText,setTranscriptText] = useState("")
   const [voiceData,setVoiceData] = useState(recorderControls.recordingBlob)
   const [email,setEmail] = useState("")
-  const [blob,setBlob] = useState()
+  const [voiceSample,setVoiceSample] = useState([])
   const [number,setNumber] = useState(0)
   const [voiceNumber,setVoiceNumber] = useState(0)
 
@@ -168,8 +171,45 @@ export default function Login({ no , handleNo }) {
       }
     })
   }
+  
+  const manageLogin = ()=>{
+    return new Promise((res,rej)=>{
+      sendData()
+    })
+  }
 
-  const manageLogIn = ()=>{
+  const addAudioElement = (blob)=>{
+    
+    const reader = new window.FileReader();
+    reader.readAsDataURL(blob);
+
+
+    reader.onload = ()=>{
+      let base64 = reader.result + "";
+      base64 = base64.split(",")[1];
+      const ab = new ArrayBuffer(base64.length);
+      const buff = new Buffer.from(base64, "base64");
+      const view = new Uint8Array(ab);
+
+      for (let i = 0; i < buff.length; ++i) {
+        view[i] = buff[i];
+      }
+      const context = new AudioContext();
+      context.decodeAudioData(ab, (Buffer)=>{
+        const wavfile = audioBufferToWav(Buffer)
+        const blob2 = new window.Blob([new DataView(wavfile)],{
+          type:"audio/wav",
+        })
+        let newVoiceSample = [...voiceSample]
+        newVoiceSample.push(blob2)
+        setVoiceSample(newVoiceSample)
+        setVoiceNumber(0)
+      })
+    }
+
+  }
+  
+  const sendData = ()=>{
     return new Promise((res,rej)=>{
       let text = email
       if(text[text.length - 1] === "."){
@@ -187,12 +227,12 @@ export default function Login({ no , handleNo }) {
       res('')
     })
   }
-  
+
   const send = ()=>{
+    console.log(`Email:${email} file: ${voiceSample[0]}`)
     var formData = new FormData()
     formData.append("email",email)
-    formData.append("file",voiceData)
-    console.log(`Email:${email} Voice: ${voiceData}`)
+    formData.append("file",voiceSample[0])
     axios.post("http://localhost:8000/login/",formData)
     .then((data)=>{
       console.log(data)
@@ -201,12 +241,16 @@ export default function Login({ no , handleNo }) {
     })
     .catch((err)=>{
       console.log(err)
-
     })
   }
-  const addAudioElement = (blob)=>{
-    setBlob(blob)
-  }
+  
+  
+  useEffect(()=>{
+    if(voiceNumber===1){
+      addAudioElement(voiceData)
+    }
+  },[voiceNumber])
+
 
   useEffect(()=>{
     if(no === -1){
@@ -219,7 +263,15 @@ export default function Login({ no , handleNo }) {
       manageVoice()
     }
     else if(no === 2){
-      manageLogIn()
+      if(voiceNumber===0){
+        say("login you in the website",5000)
+        .then(()=>{
+          manageLogin()
+        })
+      }
+      else{
+        fire++
+      }
     }
     else if(no === 3){
       send()
@@ -248,11 +300,6 @@ export default function Login({ no , handleNo }) {
     }
   },[number])
 
-  useEffect(()=>{
-    if(voiceNumber===1){
-      addAudioElement(voiceData)
-    }
-  },[voiceNumber])
 
   if (!browserSupportsSpeechRecognition) {
     return (
@@ -271,7 +318,7 @@ export default function Login({ no , handleNo }) {
                 onNotAllowedOrFound={(err)=>console.log(err)}
                 downloadFileExtension='wav'
         />
-        <Button variant="contained" className='loginBtn' onClick={()=>{manageLogIn()}}>Login</Button>
+        <Button variant="contained" className='loginBtn' onClick={()=>{send()}}>Login</Button>
         <p className="loginSignupText">Dont have an Account?<span className='toSignUp'>Sign Up</span></p>
     </div>
   )

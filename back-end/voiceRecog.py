@@ -53,6 +53,8 @@ def voiceRecognition(db_audio_paths: List[str], sample_audio_path:str)->bool:
     overlap_dist_dist2, percentage_dist_dist2 = find_overlap(dist, dist2)
     overlap_dist_dist3, percentage_dist_dist3 = find_overlap(dist, dist3)
 
+    print(overlap_dist_dist1 , overlap_dist_dist2 , overlap_dist_dist3)
+
     if overlap_dist_dist1 >=10 or overlap_dist_dist2 >=10 or overlap_dist_dist3 >=10:
         return True
 

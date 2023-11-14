@@ -4,6 +4,9 @@ import SpeechRecognition,{useSpeechRecognition} from 'react-speech-recognition';
 import axios from 'axios'
 import { AudioRecorder, useAudioRecorder} from "react-audio-voice-recorder";
 import { useNavigate } from 'react-router-dom';
+import audioBufferToWav from "audiobuffer-to-wav";
+import { Buffer } from "buffer";
+
 
 
 let fire = 0;
@@ -376,16 +379,34 @@ export default function SignUp({no,handleNo}) {
   
 
   const addAudioElement = (blob)=>{
-      // const url = URL.createObjectURL(blob)
-      // const audio = document.createElement("audio")
-      // audio.src = url
-      // audio.controls = true
-      // document.body.appendChild(audio)]
+    
+    const reader = new window.FileReader();
+    reader.readAsDataURL(blob);
 
-      let newVoiceSample = [...voiceSample]
-      newVoiceSample.push(blob)
-      setVoiceSample(newVoiceSample)
-      setVoiceNumber(0)
+
+    reader.onload = ()=>{
+      let base64 = reader.result + "";
+      base64 = base64.split(",")[1];
+      const ab = new ArrayBuffer(base64.length);
+      const buff = new Buffer.from(base64, "base64");
+      const view = new Uint8Array(ab);
+
+      for (let i = 0; i < buff.length; ++i) {
+        view[i] = buff[i];
+      }
+      const context = new AudioContext();
+      context.decodeAudioData(ab, (Buffer)=>{
+        const wavfile = audioBufferToWav(Buffer)
+        const blob2 = new window.Blob([new DataView(wavfile)],{
+          type:"audio/wav",
+        })
+        let newVoiceSample = [...voiceSample]
+        newVoiceSample.push(blob2)
+        setVoiceSample(newVoiceSample)
+        setVoiceNumber(0)
+      })
+    }
+
   }
 
   useEffect(()=>{
