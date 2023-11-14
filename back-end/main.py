@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, Form
+from fastapi import FastAPI, File, UploadFile, Form, HTTPException, status
 from typing_extensions import Annotated
 from typing import List, Union
 from fastapi.middleware.cors import CORSMiddleware
@@ -75,7 +75,7 @@ async def login(email: Annotated[str, Form()], file: UploadFile):
 
         # checking whether the data is present or not
         if(len(data_rows)==0):
-            return {"status":"fail"}
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="To record found")
         # array for file names
         file_names = ["sample_audio_", "audio_1_", "audio_2_", "audio_3_"]
 
@@ -102,7 +102,7 @@ async def login(email: Annotated[str, Form()], file: UploadFile):
         for file_name in file_names:
             os.remove(file_name)
     
-    return {"status":"fails"}
+    raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Authentication fails")
 
 
 # pydantic model for email
