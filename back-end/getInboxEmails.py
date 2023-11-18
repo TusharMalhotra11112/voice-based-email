@@ -20,7 +20,8 @@ mail.login(user, password)
 mail.select("inbox")
 
 # Search for all emails in the inbox
-status, messages = mail.search(None, "ALL")
+# status, messages = mail.search(None, "ALL")
+status, messages = mail.search(None, 'X-GM-RAW "category:primary"')
 
 # Get the list of email IDs
 email_ids = messages[0].split()
