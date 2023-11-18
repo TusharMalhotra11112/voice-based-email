@@ -69,7 +69,12 @@ def voiceRecognition(db_audio_paths, sample_audio_path):
     overlap_dist_dist2, percentage_dist_dist2 = find_overlap(dist, dist2)
     overlap_dist_dist3, percentage_dist_dist3 = find_overlap(dist, dist3)
 
-    if overlap_dist_dist1 >=10 or overlap_dist_dist2 >=10 or overlap_dist_dist3 >=10:
-        return True
+    print(overlap_dist_dist1,overlap_dist_dist2,overlap_dist_dist3)
+    print(percentage_dist_dist1,percentage_dist_dist2,percentage_dist_dist3)
 
-    return False
+    if any(overlap > 25 and overlap < 50 for overlap in [overlap_dist_dist1, overlap_dist_dist2, overlap_dist_dist3]):
+        print("matched")
+        return True
+    else:
+        print("not matched")
+        return False

@@ -185,7 +185,7 @@ export default function SignUp({no,handleNo}) {
       if(no===0){
         say("please Say your Email Id",6000)
         .then(()=>{
-          listen(6000)
+          listen(8000)
           .then(()=>{
             manageYesorNo()
             .then(()=>{
@@ -219,7 +219,7 @@ export default function SignUp({no,handleNo}) {
       if(no===1){
         say("please Say your password",6000)
         .then(()=>{
-          listen(6000)
+          listen(15000)
           .then(()=>{
             manageYesorNo()
             .then(()=>{
@@ -464,6 +464,7 @@ export default function SignUp({no,handleNo}) {
     axios.post("http://localhost:8000/register/",formData)
     .then((data)=>{
       console.log(data)
+      localStorage.setItem("email",email)
       handleNo(-1)
       nav('../homepage')
     })
@@ -484,7 +485,7 @@ export default function SignUp({no,handleNo}) {
       <input className='dummy' value={transcriptText} onChange={setTranscriptText}/>
         <p className="loginText">Sign-Up</p>
         <TextField id="standard-basic loginEmail" label="Email-Id" variant="standard" className='loginEmail' value={email}/>
-        <TextField id="standard-basic" label="Password" variant="standard" className='loginPassword' value={pass}/>
+        <TextField id="standard-basic" label="Password" variant="standard" className='loginPassword' value={pass} type='Password'/>
         <AudioRecorder
                 recorderControls={recorderControls}
                 audioTrackConstraints={{noiseSuppression:true,echoCancellation:true,sampleRate:1000,}}

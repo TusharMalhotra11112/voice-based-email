@@ -15,7 +15,7 @@ button {
 *{
     margin: 0px;
     padding: 0px;
-    
+    user-select: none;
 }
 body{
     /* background-color: black; */
@@ -107,4 +107,37 @@ body{
     width: 20vw;
     height: 10vh;
     
+}
+
+
+.compose{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    gap: 5vh;
+}
+
+.composeText{
+    font-size: 3.5rem;
+    font: bolder;
+    color: red;
+}
+
+.composeContainer{
+    background-color: rgba(255,255,255,0.4);
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    padding: 5vw 5vw;
+    display: flex;
+    flex-direction: column;
+    gap: 2vw;
+}
+
+.composeInnerText{
+    font-size: 1.5rem;
+}
+
+.composeTo,.composeSubject,.composeBody{
+    width: 50vw;
 }

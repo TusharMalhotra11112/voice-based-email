@@ -81,7 +81,7 @@ export default function Login({ no , handleNo }) {
       if(no === 0){
         const value = document.getElementsByClassName("dummy")[0].value
         handleNo(-1)
-        say(`is your Email Id ${value}? Say yes or no`,5000)
+        say(`is your Email Id ${value}? Say yes or no`,7000)
         .then(()=>{
           listen(3000)
           .then((text)=>{
@@ -128,7 +128,7 @@ export default function Login({ no , handleNo }) {
       if(no===0){
         say("Please,Enter Your Email Id",5000)
         .then(()=>{
-          listen(5000)
+          listen(7000)
           .then(()=>{
             manageYesorNo()
             .then(()=>{
@@ -235,12 +235,19 @@ export default function Login({ no , handleNo }) {
     formData.append("file",voiceSample[0])
     axios.post("http://localhost:8000/login/",formData)
     .then((data)=>{
+      localStorage.setItem("email",email)
       console.log(data)
       handleNo(-1)
       nav('../homepage')
     })
     .catch((err)=>{
       console.log(err)
+      say(`${err.response.data.message}`,5000)
+      .then(()=>{
+        setEmail("")
+        handleNo(0)
+        fire++
+      })
     })
   }
   
