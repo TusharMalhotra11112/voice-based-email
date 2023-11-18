@@ -112,7 +112,8 @@ async def login(email: Annotated[str, Form()], file: UploadFile):
         if(voiceRecognition(file_names[1:], file_names[0])):
             return {
                 "message":"success",
-                "password": data_rows[0][4]
+                "password": data_rows[0][4],
+                "user_id": data_rows[0][0]
                 }
         
         # clearing the audio files
