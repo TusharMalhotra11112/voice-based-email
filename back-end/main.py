@@ -1,4 +1,6 @@
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException, status
+from fastapi.responses import JSONResponse
+from starlette.exceptions import HTTPException as StarletteHTTPException
 from typing_extensions import Annotated
 from typing import List, Union
 from fastapi.middleware.cors import CORSMiddleware
@@ -28,6 +30,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# custome HttException handling
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request, exc):
+    temp_status_code = 404
+    if(exc.status_code):
+        temp_status_code = exc.status_code
+    
+    return JSONResponse(
+        status_code=temp_status_code,
+        content={"message": str(exc.detail)}
+        )
+        
+
 @app.get("/")
 async def root():
     return {"message": "Hello world"}
@@ -37,8 +52,9 @@ async def root():
 @app.post("/register/")
 async def upload(email: Annotated[str, Form()], password: Annotated[str, Form()], files: Annotated[List[UploadFile], File(description="Multiple wav files to upload")]):
 
+    # Checking the number of files
     if(len(files)!=3):
-        return {"status":"fail", "message":"Invalid number of files"}
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Invalid number of files.")
 
     # inserting data in the db
     with engine.connect() as conn:
@@ -54,7 +70,7 @@ async def upload(email: Annotated[str, Form()], password: Annotated[str, Form()]
         conn.commit()
 
 
-    return {"status": "success"}
+    return {"message": "success"}
 
 
 # This will do the login with email and a voice sample
@@ -75,7 +91,8 @@ async def login(email: Annotated[str, Form()], file: UploadFile):
 
         # checking whether the data is present or not
         if(len(data_rows)==0):
-            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="To record found")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User record does not exists.")
+        
         # array for file names
         file_names = ["sample_audio_", "audio_1_", "audio_2_", "audio_3_"]
 
@@ -94,13 +111,13 @@ async def login(email: Annotated[str, Form()], file: UploadFile):
         # then we need to work with the audio sample for the final validation with ML
         if(voiceRecognition(file_names[1:], file_names[0])):
             return {
-                "status":"success",
+                "message":"success",
                 "password": data_rows[0][4]
                 }
         
         # clearing the audio files
-        for file_name in file_names:
-            os.remove(file_name)
+        # for file_name in file_names:
+        #     os.remove(file_name)
     
     raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Authentication fails")
 
@@ -124,7 +141,7 @@ async def sendingEmail(email: Email):
         rows = result.all()
 
         if(len(rows)==0):
-            return {"error":"User does not exists"}
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User record does not exists.")
         
         sender_email = rows[0][0]
         sender_email_passwd = rows[0][1]
@@ -135,6 +152,6 @@ async def sendingEmail(email: Email):
     has_email_sent = sendEmail(sender_email, sender_email_passwd, email.receiver_email, email.subject, email.text) 
 
     if(has_email_sent):
-        return {"status":"success"}
+        return {"message":"success"}
 
-    return {"status":"fail"}
+    raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Email has not sent")
