@@ -11,6 +11,7 @@ from sqlalchemy import create_engine, text, URL
 
 from voiceRecog import voiceRecognition
 from sendEmail import sendEmail
+from getInboxEmails import getEmails as getInboxEmails
 
 
 
@@ -155,3 +156,24 @@ async def sendingEmail(email: Email):
         return {"message":"success"}
 
     raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Email has not sent")
+
+
+# This will get the inbox emails
+@app.get("/getEmails/{user_id}/{type}/{limit}")
+async def getEmails(user_id:int, type:str, limit:int):
+
+    with engine.connect() as conn:
+        result = conn.execute(text("SELECT id, email_id, password FROM user_data WHERE id=:id"),[{"id":user_id}])
+
+        data_rows = result.all()
+        conn.close()
+
+    if(len(data_rows)==0):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    
+    email = data_rows[0][1]
+    password = data_rows[0][2]
+
+    emails = getInboxEmails(email, password, limit)
+
+    return {"emails":emails, "count": len(emails)}
