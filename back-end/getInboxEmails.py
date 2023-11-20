@@ -1,6 +1,7 @@
 import imaplib
 import email
 from email.header import decode_header
+import re
 
 '''
 function getEmails is used to get all the emails from the user's email and password.
@@ -13,6 +14,9 @@ params:
 def getEmails(user_email:str, password:str, limit:int, type:str="primary"):
 
     mail_server = "imap.gmail.com"
+
+    # regex for target html tags, inorder to extract plain text
+    html_pattern = "<(?:\"[^\"]*\"['\"]*|'[^']*'['\"]*|[^'\">])+>"
 
     # Connect to the Gmail IMAP server
     mail = imaplib.IMAP4_SSL(mail_server)
@@ -79,7 +83,7 @@ def getEmails(user_email:str, password:str, limit:int, type:str="primary"):
                 if part.get_content_type() == "text/plain":
                     try:
                         body = part.get_payload(decode=True)
-                        email_dic["body"] = body.decode("utf-8")
+                        email_dic["body"] = re.sub(html_pattern, body.decode("utf-8"))
                         break
                     except:
                         continue
@@ -87,7 +91,7 @@ def getEmails(user_email:str, password:str, limit:int, type:str="primary"):
             try:
                 # If the email is not multipart, get the entire body
                 body = msg.get_payload(decode=True)
-                email_dic["body"] = body.decode("utf-8")
+                email_dic["body"] = re.sub(html_pattern, body.decode("utf-8"))
             except:
                 continue
         
