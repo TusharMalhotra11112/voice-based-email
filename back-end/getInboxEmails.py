@@ -1,7 +1,19 @@
-import imaplib
 import email
+import imaplib
 from email.header import decode_header
-import re
+
+from bs4 import BeautifulSoup
+
+
+# function to extract plain text from email body
+def extract_plain_text(html_content):
+    # Parse the HTML content
+    soup = BeautifulSoup(html_content, 'html.parser')
+
+    # Extract plain text
+    plain_text = soup.get_text(separator=' ', strip=True)
+    
+    return plain_text
 
 '''
 function getEmails is used to get all the emails from the user's email and password.
@@ -14,9 +26,6 @@ params:
 def getEmails(user_email:str, password:str, limit:int, type:str="primary"):
 
     mail_server = "imap.gmail.com"
-
-    # regex for target html tags, inorder to extract plain text
-    html_pattern = "<(?:\"[^\"]*\"['\"]*|'[^']*'['\"]*|[^'\">])+>"
 
     # Connect to the Gmail IMAP server
     mail = imaplib.IMAP4_SSL(mail_server)
@@ -83,7 +92,7 @@ def getEmails(user_email:str, password:str, limit:int, type:str="primary"):
                 if part.get_content_type() == "text/plain":
                     try:
                         body = part.get_payload(decode=True)
-                        email_dic["body"] = re.sub(html_pattern, body.decode("utf-8"))
+                        email_dic["body"] = extract_plain_text(body.decode("utf-8"))
                         break
                     except:
                         continue
@@ -91,7 +100,7 @@ def getEmails(user_email:str, password:str, limit:int, type:str="primary"):
             try:
                 # If the email is not multipart, get the entire body
                 body = msg.get_payload(decode=True)
-                email_dic["body"] = re.sub(html_pattern, body.decode("utf-8"))
+                email_dic["body"] = extract_plain_text(body.decode("utf-8"))
             except:
                 continue
         
