@@ -16,6 +16,7 @@ export default function HomePage({ no, handleNo }) {
   const [transcriptText, setTranscriptText] = useState("")
 
 
+  const synth = window.speechSynthesis;
   const say = (text, duration) => {
     return new Promise((res, rej) => {
       if (no === -1) {
@@ -23,7 +24,6 @@ export default function HomePage({ no, handleNo }) {
         fire++;
       }
       console.log(`saying: ${text}`)
-      const synth = window.speechSynthesis;
       const u = new SpeechSynthesisUtterance(text)
       synth.speak(u)
       setTimeout(() => {
@@ -109,6 +109,7 @@ export default function HomePage({ no, handleNo }) {
 
   useEffect(() => {
     if (no === -1) {
+      synth.cancel()
       say("you are on the HomePage please select one of the options", 5000)
     }
     else if (no === 0) {

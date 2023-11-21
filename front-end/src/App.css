@@ -20,6 +20,31 @@ button {
 body{
     /* background-color: black; */
 }
+
+.select{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    height: 100vh;
+    gap: 5vh;
+}
+
+.selectContainer{
+    background-color: rgba(255,255,255,0.3);
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    padding: 10vw;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.selectContainer>*{
+    width: 20vw;
+    height: 10vh;
+}
+
 .loginPage{
     width: 100%;
     height: 100%;
@@ -96,7 +121,6 @@ body{
 
 .homePageContainer{
     background-color: rgba(255,255,255,0.3);
-    /* border: black solid 0px; */
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     padding: 10vw;
     display: flex;
@@ -132,6 +156,8 @@ body{
     display: flex;
     flex-direction: column;
     gap: 2vw;
+    justify-content: center;
+    align-items: center;
 }
 
 .composeInnerText{
@@ -140,4 +166,51 @@ body{
 
 .composeTo,.composeSubject,.composeBody{
     width: 50vw;
+}
+.composeButton{
+    width: 10vw;
+}
+
+.inbox{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.inboxText{
+    color: red;
+    font: bolder;
+    font-size: 3.5rem;
+}
+
+.inboxContainer{
+    margin: 1rem;
+    padding: 5vw;
+    background-color: rgba(100, 100, 111, 0.2);
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 2rem;
+    margin: 20px;
+}
+
+.mailTab{
+    min-height: 3rem;
+    border: 1px solid black;
+    border-radius: 20px;
+    display: flex;
+    font-size: 1.5rem;
+    gap: 10vw;
+    justify-content: space-between;
+    padding: 10px;
+    word-wrap:break-word;
+}
+
+.mailSubject{
+    width: 50%;
+}
+
+.mailFrom{
+    flex: 1;
 }

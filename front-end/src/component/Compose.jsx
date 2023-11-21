@@ -1,8 +1,9 @@
-import { TextField } from '@mui/material'
+import { Button, TextField } from '@mui/material'
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import SendIcon from '@mui/icons-material/Send';
 
 let fire = 0;
 export default function Compose({ no , handleNo }) {
@@ -20,6 +21,7 @@ export default function Compose({ no , handleNo }) {
   const email = localStorage.getItem("email")
   const nav = useNavigate()
 
+  const synth = window.speechSynthesis;
   const say = (text,duration)=>{
     return new Promise((res,rej)=>{
       if(no === -1){
@@ -27,14 +29,12 @@ export default function Compose({ no , handleNo }) {
         fire++;
       }
       console.log(`saying: ${text}`)
-      const synth = window.speechSynthesis;
       const u = new SpeechSynthesisUtterance(text)
       synth.speak(u)
       setTimeout(()=>{
         resetTranscript()
         res('')
       },duration)
-
     })
   }
 
@@ -60,7 +60,7 @@ export default function Compose({ no , handleNo }) {
       if(no === 0){
         const value = document.getElementsByClassName("dummy")[0].value
         handleNo(-1)
-        say(`is recivers Email Id ${value}? Say yes or no`,6000)
+        say(`is recivers Email Id ${value}? Say yes or no`,8000)
         .then(()=>{
           listen(5000)
           .then((text)=>{
@@ -125,16 +125,20 @@ export default function Compose({ no , handleNo }) {
     return new Promise((res,rej)=>{
       say("Enter the email id of the receiver",5000)
       .then(()=>{
-        listen(7000)
+        listen(10000)
         .then(()=>{
           manageYesorNo()
           .then(()=>{
             setTo((to)=>{
                 let text = to
+                if(text[text.length - 1] === "."){
+                  text = text.slice(0,text.length - 1)
+                }
                 text = text.replace("at the rate","@")
                 text = text.replace("at the date","@")
                 text = text.replace("@ the rate","@")
                 text = text.replace(" ","")
+                text = text.toLowerCase()
                 return text
             })
             handleNo(1)
@@ -194,7 +198,7 @@ export default function Compose({ no , handleNo }) {
   
   const send = ()=>{
     let data = {
-      "user_id":email,
+      "user_id":localStorage.getItem("user_id"),
       "subject":subject,
       "text":body,
       "receiver_email":to,
@@ -215,6 +219,7 @@ export default function Compose({ no , handleNo }) {
 
   useEffect(()=>{
     if(no === -1){
+      synth.cancel()
       say("You are on the compose page",5000)
     }
     else if(no === 0){
@@ -269,6 +274,7 @@ export default function Compose({ no , handleNo }) {
           <p className="composeInnerText">Body:</p>
           <TextField id="outlined-multiline-static" multiline rows={5} className='composeBody' value={body} />
         </div>
+        <Button variant="contained" endIcon={<SendIcon />} className='composeButton'>Send</Button>
       </div>
     </div>
   )

@@ -27,20 +27,21 @@ export default function Login({ no , handleNo }) {
 
   const nav = useNavigate()
 
-  const nouns = ['cat', 'dog', 'house', 'car', 'tree']
-  const verbs = ['runs', 'jumps', 'sleeps', 'eats', 'drives']
-  const adjectives = ['happy', 'quick', 'lazy', 'big', 'red']
-  const adverbs = ['slowly', 'loudly', 'always', 'soon', 'never']
+  const adjectives = ["beautiful", "lazy", "professional", "lovely", "dumb", "rough", "soft", "hot", "vibrating", "slimy"]
+  const nouns = ["bird", "clock", "boy", "plastic", "duck", "teacher", "old lady", "professor", "hamster", "dog"]
+  const verbs = ["kicked", "ran", "flew", "dodged", "sliced", "rolled", "died", "breathed", "slept", "killed"]
+  const adverbs = ["slowly", "elegantly", "precisely", "quickly", "sadly", "humbly", "proudly", "shockingly", "calmly", "passionately"]
 
   const fetchSentence = ()=>{
-    const noun = nouns[Math.floor(Math.random() * 5)]
-    const verb = verbs[Math.floor(Math.random() * 5)]
-    const adjective = adjectives[Math.floor(Math.random() * 5)]
-    const adverb = adverbs[Math.floor(Math.random() * 5)]
+    const noun = nouns[Math.floor(Math.random() * 10)]
+    const verb = verbs[Math.floor(Math.random() * 10)]
+    const adjective = adjectives[Math.floor(Math.random() * 10)]
+    const adverb = adverbs[Math.floor(Math.random() * 10)]
     return `The ${adjective} ${noun} ${verb} ${adverb}`
   }
-
-
+  
+  
+  const synth = window.speechSynthesis;
   const say = (text,duration)=>{
     return new Promise((res,rej)=>{
       if(no === -1){
@@ -48,7 +49,6 @@ export default function Login({ no , handleNo }) {
         fire++;
       }
       console.log(`saying: ${text}`)
-      const synth = window.speechSynthesis;
       const u = new SpeechSynthesisUtterance(text)
       synth.speak(u)
       setTimeout(()=>{
@@ -235,7 +235,10 @@ export default function Login({ no , handleNo }) {
     formData.append("file",voiceSample[0])
     axios.post("http://localhost:8000/login/",formData)
     .then((data)=>{
+      console.log(data.data.user_id)
       localStorage.setItem("email",email)
+      localStorage.setItem("user_id",data.data.user_id)
+
       console.log(data)
       handleNo(-1)
       nav('../homepage')
@@ -261,7 +264,8 @@ export default function Login({ no , handleNo }) {
 
   useEffect(()=>{
     if(no === -1){
-      say("hello welcome to the login Page",4000)
+      synth.cancel()
+      say("You are on the login Page",4000)
     }
     else if(no === 0){
       manageEmail()

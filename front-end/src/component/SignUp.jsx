@@ -34,13 +34,13 @@ export default function SignUp({no,handleNo}) {
   const sentence2 = 'Please say this email system is voice-based'
   const sentence3 = 'Please say I am signing in this system'
 
+  const synth = window.speechSynthesis;
   const say = (text,duration)=>{
     return new Promise((res,rej)=>{
       if(no === -1){
         handleNo(0)
         fire++;
       }
-      const synth = window.speechSynthesis;
       console.log(`saying: ${text}`)
       const u = new SpeechSynthesisUtterance(text)
       synth.speak(u)
@@ -333,7 +333,8 @@ export default function SignUp({no,handleNo}) {
 
   useEffect(()=>{
     if(no === -1){
-      say("Hello welcome to the Sign-Up page",5000)
+      synth.cancel()
+      say("You are on the Sign-Up page",5000)
     }
     else if(no === 0){
       manageEmail()
