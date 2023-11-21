@@ -17,6 +17,8 @@ export default function Inbox({ no , handleNo }) {
 
   const [transcriptText, setTranscriptText] = useState("")
   const [mails,setMalis] = useState([])
+  const [mailNo,setMailNo] = useState(0)
+
   const synth = window.speechSynthesis;
   const say = (text,duration)=>{
     return new Promise((res,rej)=>{
@@ -66,9 +68,58 @@ export default function Inbox({ no , handleNo }) {
     })
   }
 
+  const sayBody = ()=>{
+    return new Promise((res,rej)=>{
+      say(`${mails[mailNo].body}`,10000)
+      .then(()=>{
+        res('')
+      })
+    })
+  }
+
+  const manageYesorNo = ()=>{
+    return new Promise((res,rej)=>{
+      say(`would you like to listen to the content of the mail? say yes or no`,5000)
+      .then(()=>{
+        listen(3000)
+        .then((text)=>{
+          setTimeout(()=>{
+            if(text === "Yes." || text === "yes" || text === "Yes"){
+              console.log(`accepted : ${text}`)
+              res('')
+            }
+            else{
+              console.log(`rejected :${text}`)
+              rej('')
+            }
+          },1000)
+        })
+      })
+    })
+  }
+
   const sayMail = ()=>{
     return new Promise((res,rej)=>{
-      
+
+      say(`${mails[mailNo].subject} from ${mails[mailNo].from} `,10000)
+      .then(()=>{
+        manageYesorNo()
+        .then(()=>{
+          sayBody()
+          .then(()=>{
+            setMailNo((prev)=>{
+            return(prev+1)
+            })
+            fire++
+          })
+        })
+        .catch(()=>{
+          setMailNo((prev)=>{
+            return(prev+1)
+          })
+          fire++
+        })
+      })
     })
   }
 
@@ -85,12 +136,25 @@ export default function Inbox({ no , handleNo }) {
     else if(no === 1){
       sayMail()
     }
+    else if(no === 2){
+      say('navigating to homepage',5000)
+      .then(()=>{
+        nav('./hompage')
+      })
+    }
   },[fire])
 
   useEffect(()=>{
     console.log(`Transcript:${transcript}`)
     setTranscriptText(transcript)
   },[transcript])
+
+
+  if (!browserSupportsSpeechRecognition) {
+    return (
+      <div>Speech Recognition is not supported in this browser</div>
+    )
+  }
 
   return (
     <div className='inbox'>

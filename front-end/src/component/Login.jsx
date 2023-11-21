@@ -200,7 +200,7 @@ export default function Login({ no , handleNo }) {
         const blob2 = new window.Blob([new DataView(wavfile)],{
           type:"audio/wav",
         })
-        let newVoiceSample = [...voiceSample]
+        let newVoiceSample = []
         newVoiceSample.push(blob2)
         setVoiceSample(newVoiceSample)
         setVoiceNumber(0)

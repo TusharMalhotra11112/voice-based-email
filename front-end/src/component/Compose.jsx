@@ -79,8 +79,9 @@ export default function Compose({ no , handleNo }) {
         })
       }
       else if(no === 1){
+        const value = document.getElementsByClassName("dummy")[0].value
         handleNo(-1)
-        say(`would you like to repeate the subject? Say yes or no`,6000)
+        say(`is your subject : ${value} say yes or no`,10000)
         .then(()=>{
           listen(5000)
           .then((text)=>{
@@ -99,8 +100,9 @@ export default function Compose({ no , handleNo }) {
         })
       }
       else if(no === 2){
+        const value = document.getElementsByClassName("dummy")[0].value
         handleNo(-1)
-        say(`would you like to repeate the body? Say yes or no`,6000)
+        say(`Is your body:${value}? Say yes or no`,12000)
         .then(()=>{
           listen(5000)
           .then((text)=>{
