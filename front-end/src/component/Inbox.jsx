@@ -33,7 +33,7 @@ export default function Inbox({ no , handleNo }) {
         resetTranscript()
         res('')
       },duration)
-
+      // },(text.length)*100)
     })
   }
 
@@ -42,7 +42,7 @@ export default function Inbox({ no , handleNo }) {
     console.log("listening")
     return new Promise((res,rej)=>{
       resetTranscript()
-      say("now",0)
+      say("now",400)
       .then(()=>{
         SpeechRecognition.startListening({continuous:true})
       })
@@ -59,7 +59,7 @@ export default function Inbox({ no , handleNo }) {
     return new Promise((res,rej)=>{
       axios.get(`http://localhost:8000/getEmails/${localStorage.getItem("user_id")}/primary/5`)
       .then((data)=>{
-        setMalis(data.data.emails)
+        setMalis(data.data.emails.reverse())
         console.log(data.data.emails)
         handleNo(1)
         fire++
@@ -88,9 +88,12 @@ export default function Inbox({ no , handleNo }) {
               console.log(`accepted : ${text}`)
               res('')
             }
-            else{
+            else if(text === "No." || text === "no" || text === "No"){
               console.log(`rejected :${text}`)
               rej('')
+            }
+            else{
+              fire++
             }
           },1000)
         })
@@ -100,9 +103,15 @@ export default function Inbox({ no , handleNo }) {
 
   const sayMail = ()=>{
     return new Promise((res,rej)=>{
-
-      say(`${mails[mailNo].subject} from ${mails[mailNo].from} `,10000)
+      if(mailNo === 5){
+        handleNo(2)
+        fire++
+        res('')
+      }
+      say(`${mails[mailNo].subject}`,8000)
       .then(()=>{
+        say(` from ${mails[mailNo].sender} `,5000)
+        .then(()=>{
         manageYesorNo()
         .then(()=>{
           sayBody()
@@ -120,11 +129,13 @@ export default function Inbox({ no , handleNo }) {
           fire++
         })
       })
+      })
     })
   }
 
   useEffect(()=>{
     if(no === -1){
+      synth.cancel()
       say("you are on the inbox page",5000)
     }
     else if(no === 0){
@@ -137,9 +148,10 @@ export default function Inbox({ no , handleNo }) {
       sayMail()
     }
     else if(no === 2){
+      handleNo(-1)
       say('navigating to homepage',5000)
       .then(()=>{
-        nav('./hompage')
+        nav('../homepage')
       })
     }
   },[fire])
