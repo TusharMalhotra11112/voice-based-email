@@ -1,6 +1,7 @@
 import email
 import imaplib
 from email.header import decode_header
+from emailSummerization import summarize_email
 
 from bs4 import BeautifulSoup
 
@@ -92,7 +93,7 @@ def getEmails(user_email:str, password:str, limit:int, type:str="primary"):
                 if part.get_content_type() == "text/plain":
                     try:
                         body = part.get_payload(decode=True)
-                        email_dic["body"] = extract_plain_text(body.decode("utf-8"))
+                        email_dic["body"] = summarize_email(extract_plain_text(body.decode("utf-8")))
                         break
                     except:
                         continue
@@ -100,7 +101,7 @@ def getEmails(user_email:str, password:str, limit:int, type:str="primary"):
             try:
                 # If the email is not multipart, get the entire body
                 body = msg.get_payload(decode=True)
-                email_dic["body"] = extract_plain_text(body.decode("utf-8"))
+                email_dic["body"] = summarize_email(extract_plain_text(body.decode("utf-8")))
             except:
                 continue
         
