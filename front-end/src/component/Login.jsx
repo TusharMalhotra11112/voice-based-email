@@ -16,6 +16,7 @@ export default function Login({ no , handleNo }) {
     resetTranscript,
     browserSupportsSpeechRecognition
   } = useSpeechRecognition();
+
   const recorderControls = useAudioRecorder()
   
   const [transcriptText,setTranscriptText] = useState("")
@@ -126,12 +127,15 @@ export default function Login({ no , handleNo }) {
   const manageEmail = ()=>{
     return new Promise((res,rej)=>{
       if(no===0){
+        const elem = document.getElementsByClassName("loginEmail")[0];
+        elem.style.boxShadow = "0px 1px 2px 0px #12ED9E, 1px 2px 4px 0px #12ED9E,2px 4px 8px 0px #12ED9E,2px 4px 16px 0px #12ED9E"
         say("Please,Enter Your Email Id",5000)
         .then(()=>{
           listen(7000)
           .then(()=>{
             manageYesorNo()
             .then(()=>{
+              elem.style.boxShadow = ""
               handleNo(1)
               fire++
               res('')
@@ -311,6 +315,19 @@ export default function Login({ no , handleNo }) {
     }
   },[number])
 
+    useEffect(()=>{
+    const ele = document.querySelectorAll(".stroke");
+    if(listening){
+      for (var index=0 ; index < ele.length; index++) {
+        ele[index].style.opacity = "0.7";
+      }
+    }
+    else{
+      for (var index=0 ; index < ele.length; index++) {
+        ele[index].style.opacity = "0";
+      }
+    }
+  },[listening])
 
   if (!browserSupportsSpeechRecognition) {
     return (
@@ -322,7 +339,8 @@ export default function Login({ no , handleNo }) {
     <div className='loginTab'>
       <input className='dummy' value={transcriptText} onChange={setTranscriptText}/>
         <p className="loginText">Login</p>
-        <TextField id="standard-basic" label="Email-Id" variant="standard" className='loginEmail' value={email}/>
+        {/* <TextField id="standard-basic" label="Email-Id" variant="standard" className='loginEmail' value={email}/> */}
+        <input type="text" className='loginEmail' value ={email} placeholder='Enter Email'/>
         <AudioRecorder
                 recorderControls={recorderControls}
                 audioTrackConstraints={{noiseSuppression:true,echoCancellation:true,sampleRate:1000,}}

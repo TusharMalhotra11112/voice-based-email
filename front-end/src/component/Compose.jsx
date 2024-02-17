@@ -86,7 +86,7 @@ export default function Compose({ no , handleNo }) {
           listen(5000)
           .then((text)=>{
             setTimeout(()=>{
-              if(text === "No." || text === "No" || text === "no"){
+              if(text === "Yes." || text === "Yes" || text === "yes"){
                 console.log(`accepted : ${text}`)
                 handleNo(0)
                 res('')
@@ -107,7 +107,7 @@ export default function Compose({ no , handleNo }) {
           listen(5000)
           .then((text)=>{
             setTimeout(()=>{
-              if(text === "No." || text === "No" || text === "no"){
+              if(text === "Yes." || text === "Yes" || text === "yes"){
                 console.log(`accepted : ${text}`)
                 handleNo(0)
                 res('')

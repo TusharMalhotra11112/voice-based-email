@@ -85,19 +85,42 @@ export default function Select({ no, handleNo }) {
     setTranscriptText(transcript)
   },[transcript])
 
+  useEffect(()=>{
+    const ele = document.querySelectorAll(".stroke");
+    if(listening){
+      for (var index=0 ; index < ele.length; index++) {
+        ele[index].style.opacity = "0.7";
+      }
+    }
+    else{
+      for (var index=0 ; index < ele.length; index++) {
+        ele[index].style.opacity = "0";
+      }
+    }
+  },[listening])
+
   return (
     <div className='select'>
       <input className='dummy' value={transcriptText} onChange={setTranscriptText} />
-      <p className="homePageText">Select</p>
+      <p className="homePageText">SELECT</p>
         <div className="selectContainer">
-            <Button variant="contained" size='large' onClick={()=>{
+          <button className="selectButton" onClick={()=>{
+              handleNo(-1)
+              nav("./login")
+            }}>Login</button>
+          <button className="selectButton" onClick={()=>{
+              handleNo(-1)
+              nav("./signup")
+            }}>Sign Up</button>
+
+            {/* <Button variant="contained" size='large' className="selectButton" onClick={()=>{
               handleNo(-1)
               nav("./login")
             }}>Login</Button> 
             <Button variant="contained" size='large' onClick={()=>{
               handleNo(-1)
               nav("./signup")
-            }}>Signup</Button> 
+            }}>Signup</Button>  */}
         </div>
     </div>
   )

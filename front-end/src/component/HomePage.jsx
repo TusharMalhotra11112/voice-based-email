@@ -64,9 +64,14 @@ export default function HomePage({ no, handleNo }) {
   }
   
   const manageLogOut = ()=>{
-    console.log(`navigating to logout`);
-    handleNo(-1)
-    nav('../')
+    console.log(`Logging out`);
+    say("logging out")
+    .then(()=>{
+      localStorage.clear("user_id")
+      localStorage.clear("email_id")
+      handleNo(-1)
+      nav('../')
+    })
 
   }
 

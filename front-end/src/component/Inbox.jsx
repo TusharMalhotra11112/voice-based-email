@@ -32,8 +32,8 @@ export default function Inbox({ no , handleNo }) {
       setTimeout(()=>{
         resetTranscript()
         res('')
-      },duration)
-      // },(text.length)*100)
+      // },duration)
+      },(text.length)*100)
     })
   }
 

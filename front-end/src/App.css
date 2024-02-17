@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
 .noteContainer {
     border: 1px solid grey;
     min-height: 15rem;
@@ -18,7 +21,8 @@ button {
     user-select: none;
 }
 body{
-    /* background-color: black; */
+    background-color: #21D4FD;
+        background-image: linear-gradient(19deg, #9E12ED 0%, #3112ED 100%);
 }
 
 .select{
@@ -47,20 +51,24 @@ body{
 
 .loginPage{
     width: 100%;
-    height: 100%;
+    height: 100vh;
     display: flex;
     justify-content: center;
+    align-items: center;
 }
-.loginBg{
+
+/* .loginBg{
     width: 100vw;
     height: 100vh;
     opacity: 0.3;
     position: absolute;
     z-index: -1;
-}
+} */
 
 .loginTab{
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.5);
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
     display: flex;
     flex-direction: column;
     width: 40vw;
@@ -72,14 +80,18 @@ body{
     top: 0px;
     border-radius: 20px;
     min-height: 50vh;
-    margin-top: 25vh;
 }
 .loginText{
-    color: rgb(255, 0, 0);
+    color: #CEED12;
     font-size: 2.5rem;
 }
 .loginEmail{
+    height: 5vh;
     width: 30vw;
+    border-radius: 20px;
+    padding-left: 20px;
+    border: none;
+    /* box-shadow: 0px 1px 2px 0px #12ED9E, 1px 2px 4px 0px #12ED9E,2px 4px 8px 0px #12ED9E,2px 4px 16px 0px #12ED9E; */
 }
 .loginPassword{
     width: 30vw;
@@ -92,7 +104,7 @@ body{
     color: black;
 }
 .toSignUp{
-    color: blue;
+    color: red;
     font-weight: bold;
     margin: 0px 10px;
 
@@ -116,7 +128,20 @@ body{
 .homePageText{
     font-size: 3.5rem;
     font: bolder;
-    color: red;
+    color: #ED9E12;
+    font-family: "Poppins", sans-serif;
+}
+.selectButton{
+    background-color: #41D8F1;
+    background: linear-gradient(110deg,#12CEED 0%,#1261ED 100%);
+    border: none;
+    cursor: pointer;
+    border-radius: 20px;
+    font-size: 24px;
+    font-family: "Roboto", sans-serif;
+    color: #ED3112;
+    box-shadow: rgba(0, 0, 0, 0.6) 0px 5px 15px;
+    font-weight: bold;
 }
 
 .homePageContainer{
@@ -219,4 +244,50 @@ body{
 
 .mailFrom{
     flex: 1;
+}
+
+
+/* ----------------------------------------- */
+
+.backgroundWave{
+    justify-self: center;
+    align-self: center;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    z-index: -1;
+}
+.stroke{
+    width: 2vw;
+    height: 15vh;
+    background: linear-gradient(240deg,#ED12CE,#F141D8);
+    transition: all 0.2s ease-in-out;
+    animation: voice 1.2s infinite linear;
+    border-radius: 20px;
+    /* opacity: 0.7; */
+}
+@keyframes voice{
+    0%{
+        height: 5vh;
+    }
+    50%{
+        height: 30vh;
+    }
+    100%{
+        height: 5vh;
+    }
+}
+.stroke:nth-child(4n){
+    animation-delay: 0s;
+}
+.stroke:nth-child(4n+1){
+    animation-delay: 0.3s;
+}
+.stroke:nth-child(4n+2){
+    animation-delay: 0.6s;
+}
+.stroke:nth-child(4n+3){
+    animation-delay: 0.9s;
 }

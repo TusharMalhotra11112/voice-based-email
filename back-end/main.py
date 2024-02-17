@@ -7,8 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import os
 import time
-from sqlalchemy import create_engine, text, URL
-
+from sqlalchemy import create_engine, text
 from voiceRecog import voiceRecognition
 from sendEmail import sendEmail
 from getInboxEmails import getEmails as getInboxEmails
@@ -68,19 +67,19 @@ async def upload(email: Annotated[str, Form()], password: Annotated[str, Form()]
             "audio_3": files[2].file.read()
         }])
 
+        result = conn.execute(text("SELECT id, audio_1, audio_2, audio_3, password FROM user_data WHERE email_id=:email_id"), [{"email_id":email}])
+        user_id = result.all[0][0]
         conn.commit()
 
 
-    return {"message": "success"}
+    return {"message": "success", "user_id":user_id}
 
 
 # This will do the login with email and a voice sample
 @app.post("/login/")
 async def login(email: Annotated[str, Form()], file: UploadFile):
-    
     with engine.connect() as conn:
         result = conn.execute(text("SELECT id, audio_1, audio_2, audio_3, password FROM user_data WHERE email_id=:email_id"), [{"email_id":email}])
-
         # checking for the uploads folder
         if(os.path.isdir("uploads")==False):
             print("uploads folder not found...")
