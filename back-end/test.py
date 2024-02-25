@@ -1,34 +1,33 @@
-# import re
+import json
+import re
 
-# html_pattern = "<(?:\"[^\"]*\"['\"]*|'[^']*'['\"]*|[^'\">])+>"
 
-content = "<!DOCTYPE html>\r\n<html>\r\n<head>\r\n</head>\r\n<body style=\"max-width:600px;margin:auto;border:1px solid #f2f2f2;border-radius:8px;padding:10px;\">\r\n<p>Hi Shobhit,</p>\r\n<div>\r\n<p><strong>Myntra</strong> is currently looking for <strong>Data Analyst</strong><strong>&nbsp;</strong>who will monitor key metrics such as revenue per unit, gross margin, provisioning liquidation, conversion, average order value, customer acquisition, top-performing styles, etc</p>\r\n<p>They will work with the analytics team to measure the effectiveness of marketing campaigns to evaluate and improve future performance.</p>\r\n<div>\r\n<div><strong>Salary</strong>:- INR 12 Lakhs (via glassdoor)</div>\r\n<p style=\"text-align: center; max-width: 700px; margin: 20px 0;\"><strong><a style=\"background: #176ede; color: #fff; padding: 10px 20px; border-radius: 4px; text-decoration: none;\" href=\"https://unstop.com/jobs/data-analyst-myntra-822449?utm_source=Jobs&amp;utm_medium=D2C-Newsletters&amp;utm_campaign=Eng-4th-Year\">Apply Now</a></strong></p>\r\n</div>\r\n</div>\r\n<div>\r\n<p>Regards,<br />Team Unstop&nbsp;</p>\r\n</div>\r\n</body>\r\n<p style=\"text-align: center;\"><a href=\"https://unstop.com/newsletter-unsubscribe/c2hvYmhpdG1pc2hyYTIwMDJAZ21haWwuY29t\"  style=\"font-size: 8px;\">Unsubscribe here</a></p>\r\n</html>\r\n"
+def extractJSON(text: str, start='{', end='}'):
+    start_index = text.find(start)
+    end_index = text.find(end)
 
-# output = re.sub(html_pattern, '', content) 
-# print(output)
+    res = text[start_index:end_index+1]
+    return res
 
-from bs4 import BeautifulSoup
-import requests  # You may need to install the requests library: pip install requests
 
-def extract_plain_text(html_content):
-    # Parse the HTML content
-    soup = BeautifulSoup(html_content, 'html.parser')
+text = """
+{
+"subject": "Application for Full Stack Developer Role",
+"body": "Dear Hiring Manager, \n I am writing to express my interest in the Full Stack Developer role at your company. With my strong passion for web development and my skills in both front-end and back-end development, I believe I would be a great fit for this position. \n\nI have extensive experience in HTML, CSS, JavaScript, and various frameworks such as React and Angular. Additionally, I have a solid understanding of backend technologies including Node.js, Express, and MongoDB. I am confident that my skills and experience align with the requirements of this role. \n\nI have attached my resume for your review. I would appreciate the opportunity to discuss my qualifications further and how I can contribute to your team. Thank you for your time and consideration. \n\nSincerely, \n[Your Name]",
+"question": [
+"What is your greatest strength as a full stack developer?",
+"Can you give an example of a project you worked on that showcases your full stack skills?",
+"How do you stay up-to-date with the latest technologies and trends in full stack development?"
+]
+}
+"""
 
-    # Extract plain text
-    plain_text = soup.get_text(separator=' ', strip=True)
-    
-    return plain_text
 
-output = extract_plain_text(content)
+text = text.replace("\n", "")
+text = text.replace("\n\n", "")
+match = extractJSON(text)
+print(match)
+
+output = json.loads(match)
+
 print(output)
-
-# Example usage:
-# url = 'https://example.com'  # Replace with the URL of the HTML page or provide your HTML content
-# response = requests.get(url)
-
-# if response.status_code == 200:
-#     html_content = response.text
-#     extracted_text = extract_plain_text(html_content)
-#     print(extracted_text)
-# else:
-#     print(f"Error accessing the URL. Status code: {response.status_code}")
