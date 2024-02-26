@@ -139,9 +139,8 @@ class Email(BaseModel):
     text: str
     receiver_email: str
 
+
 # This will send the email
-
-
 @app.post("/sendEmail/")
 async def sendingEmail(email: Email):
 
