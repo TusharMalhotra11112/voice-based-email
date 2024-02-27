@@ -215,17 +215,14 @@ async def summarizeEmail(email: EmailBody):
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
     # now, making request to llama2 for summarizing the email.
-    prompt = """
-    You have to summarize the email body and the summarized email body should be within 30 words.
+    system_prompt = """
+    You have to summarize the email body and the summarized email body should be within 30 words."""
 
-    EMAIL BODY: """
+    prompt = email.text
 
-    prompt += email.text
+    output = ask_to_openai(system_prompt, prompt)
 
-    output = make_request(prompt)
-    print(output)
-
-    return {"message": "working !!"}
+    return {"summary": output}
 
 
 class EmailTopic(BaseModel):
