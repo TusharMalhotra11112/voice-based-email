@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h2>hello world</h2>
+
+    <script>
+      console.log("Compose email procedure");
+
+      // defining the api url
+      const url = "http://localhost:8000";
+
+      // First step,
+      // the user will ask a question
+      // then an object with these values should be created
+      let askQuestionData = {
+        user_id: 9,
+        topic: "write an email for front-end developer role in xyz company?",
+      };
+
+      // Second step,
+      // the above object will be sent to the server
+      // as a response the output will an array of questions
+      /*
+      let questions = fetch(url + "/getQuestions", {
+        method: "POST",
+        body: JSON.stringify(askQuestionData),
+        headers: { "Content-Type": "application/json" },
+      })
+        .then((res) => res.json())
+        .then((questions) => questions) // returning the questions 
+        .catch((err) => console.log(err));
+        */
+
+      // Third step,
+      // the user will answer the questions
+      // then an object with these values should be created
+      // with the same user_id, topic and data
+      let questionWithAnswers = {
+        user_id: 9,
+        topic: "write an email for front-end developer role in xyz company?",
+        data: [
+          {
+            question:
+              "What is the name and title of the receiver of the email?",
+            answer: "John Doe, HR Manager.",
+          },
+          {
+            question:
+              "What is the name of the XYZ company's HR contact person?",
+            answer: "John Doe.",
+          },
+          {
+            question:
+              "What are the specific requirements for the front-end developer role at XYZ company?",
+            answer:
+              "3+ years of experience in front-end development, proficiency in HTML, CSS, and JavaScript",
+          },
+          {
+            question:
+              "What technologies and programming languages are preferred by XYZ company for front-end development?",
+            answer: "React, Angular, Vue.js, and Node.js",
+          },
+        ],
+      };
+
+      // Fourth step,
+      // the above object will be sent to the server
+      // inorder to get the complete email
+      // the response object contains subject and body of the email
+      fetch(url + "/writeEmail", {
+        method: "POST",
+        body: JSON.stringify(questionWithAnswers),
+        headers: { "Content-Type": "application/json" },
+      })
+        .then((res) => res.json())
+        .then((data) => console.log(data))
+        .catch((err) => console.log(err));
+    </script>
+  </body>
+</html>

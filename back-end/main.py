@@ -14,7 +14,7 @@ from sendEmail import sendEmail
 from getInboxEmails import getEmails as getInboxEmails
 import uuid
 from dotenv import load_dotenv
-from utils import make_request, extractJSON
+from utils import make_request, extractJSON, ask_to_openai
 import re
 
 load_dotenv()
@@ -233,22 +233,13 @@ class EmailTopic(BaseModel):
     topic: str
 
 
-@app.post("/createEmail/")
-async def createEmail(email_topic: EmailTopic):
-
-    prompt = """
-    You have to write an email, where a a topic is given, around which you have to frame an email. It is obvious that some values will be missing while writing the email, write the questions for asking the missing values. Instead of writing a plane text you have to output a JSON. Word limit should be 100.
-
-    EXAMPLE OUTPUT:
-
-    {"subject":"Request for Leave", "body":"body comes here", "question":[" ques1", "ques2", "ques3",...]}
-
-    TOPIC: """
+@app.post("/getQuestions/")
+def GetQuestions(email: EmailTopic):
 
     # checking for the valid user
     with engine.connect() as conn:
         result = conn.execute(text(
-            "SELECT id, email_id, password FROM user_data WHERE id=:id"), [{"id": email_topic.user_id}])
+            "SELECT id, email_id, password FROM user_data WHERE id=:id"), [{"id": email.user_id}])
 
         data_rows = result.all()
         conn.close()
@@ -257,22 +248,73 @@ async def createEmail(email_topic: EmailTopic):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
-    # now, making request to llama2 for writing email and required question.
+    # now, making request to openai for getting the questions.
+    system_prompt = "You are a skilled email writer. Here you do not need to write an email, but ask for suitable questions, which ask for the facts and information you need to write an email like what is the name of the receiver, what is the purpose of the email, etc. Remember the output should a JSON array of questions."
 
-    prompt += email_topic.topic
+    prompt = email.topic
 
-    output = make_request(prompt)
-    print(output)
+    output = ask_to_openai(system_prompt, prompt)
 
-    if output:
-        try:
-            output = output.replace("\n", "")
-            output = output.replace("\n\n", "")
-            match = extractJSON(output)
-            data = json.loads(match)
+    output = output.replace("\n", " ")
+    output = output.replace("\t", " ")
+    json_string = extractJSON(output, start="[", end="]")
+    json_output = json.loads(json_string)
+    print(json_output)
 
-            print("Data", data)
-        except Exception as e:
-            print("Got an error", e)
+    return {"questions": json_output}
 
-    return {"message": "working !!"}
+
+class QuestionsWithAnswers(BaseModel):
+    question: str
+    answer: str
+
+
+class EmailTopicWithData(BaseModel):
+    user_id: int
+    topic: str
+    data: List[QuestionsWithAnswers]
+
+
+@app.post("/writeEmail/")
+def writeEmail(email_data: EmailTopicWithData):
+    # checking for the valid user
+    with engine.connect() as conn:
+        result = conn.execute(text(
+            "SELECT id, email_id, password FROM user_data WHERE id=:id"), [{"id": email_data.user_id}])
+
+        data_rows = result.all()
+        conn.close()
+
+    if (len(data_rows) == 0):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+    question_answers = []
+    for data in email_data.data:
+        question_answers.append(data.question + "\n" + data.answer)
+
+    question_answers = "\n".join(question_answers)
+
+    # now, making request to openai for getting the questions.
+    system_prompt = "You are a skilled email writer and you have to write a concise email with given topic and extra data"
+
+    """
+    structure of the prompt:
+
+    TOPIC: <topic>
+
+    INFORMATION:
+    <data>
+    """
+    prompt = "TOPIC: " + email_data.topic + \
+        "\n" + "INFORMATION: \n" + question_answers
+
+    output = ask_to_openai(system_prompt, prompt)
+
+    # extract subject from the email
+    subject = re.search(r"Subject: (.+)", output).group(1)
+
+    # extract the body of the email
+    body = output.replace("Subject: " + subject, "")
+
+    return {"subject": subject, "body": body}
