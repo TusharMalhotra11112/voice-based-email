@@ -194,8 +194,13 @@ async def getEmails(user_id: int, type: str, limit: int):
     return {"emails": emails, "count": len(emails)}
 
 
+class EmailBody(BaseModel):
+    user_id: int
+    text: str  # email body
+
+
 @app.post("/summarizeEmail/")
-async def summarizeEmail(email: Email):
+async def summarizeEmail(email: EmailBody):
 
     # checking for the valid user
     with engine.connect() as conn:
@@ -211,7 +216,7 @@ async def summarizeEmail(email: Email):
 
     # now, making request to llama2 for summarizing the email.
     prompt = """
-    You have to summarize the email body and the summarized email body should be within 50 words.
+    You have to summarize the email body and the summarized email body should be within 30 words.
 
     EMAIL BODY: """
 

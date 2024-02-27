@@ -1,10 +1,15 @@
 import replicate
 import dotenv
+import os
+from openai import OpenAI
 
 dotenv.load_dotenv()
 
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # extract json from a given string
+
+
 def extractJSON(text: str, start='{', end='}'):
     start_index = text.find(start)
     end_index = text.find(end)
@@ -39,3 +44,17 @@ def make_request(prompt: str):
         output += text
 
     return output
+
+
+def ask_to_openai(system_promt: str, prompt: str) -> str:
+    client = OpenAI(api_key=OPENAI_API_KEY)
+
+    completion = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": system_promt},
+            {"role": "user", "content": prompt},
+        ]
+    )
+
+    return completion.choices[0].message.content
