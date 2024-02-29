@@ -17,7 +17,7 @@ export default function Inbox({ no , handleNo }) {
 
   const [transcriptText, setTranscriptText] = useState("")
   const [mails,setMalis] = useState([])
-  const [mailNo,setMailNo] = useState(0)
+  const [mailNo,setMailNo] = useState(-1)
 
   const synth = window.speechSynthesis;
   const say = (text,duration)=>{
@@ -61,6 +61,7 @@ export default function Inbox({ no , handleNo }) {
       .then((data)=>{
         setMalis(data.data.emails.reverse())
         console.log(data.data.emails)
+        setMailNo(0)
         handleNo(1)
         fire++
         res('')
@@ -160,7 +161,34 @@ export default function Inbox({ no , handleNo }) {
     console.log(`Transcript:${transcript}`)
     setTranscriptText(transcript)
   },[transcript])
+  
+  useEffect(()=>{
+    const ele = document.querySelectorAll(".stroke");
+    if(listening){
+      for (var index=0 ; index < ele.length; index++) {
+        ele[index].style.opacity = "0.7";
+      }
+    }
+    else{
+      for (var index=0 ; index < ele.length; index++) {
+        ele[index].style.opacity = "0";
+      }
+    }
+  },[listening])
 
+  useEffect(()=>{
+    try{
+      const mail = document.getElementsByClassName(`mail${mailNo}`)[0];
+      mail.style.boxShadow = "rgba(148, 18, 64, 0.20) 0px 10px 20px, rgba(148, 18, 64,0.4) 0px 6px 6px"
+      mail.style.opacity = "1"
+      const lastmail = document.getElementsByClassName(`mail${mailNo-1}`)[0];
+      lastmail.style.boxShadow = "none"
+      lastmail.style.opacity = "0.4"
+    }
+    catch{
+
+    }
+  },[mailNo])
 
   if (!browserSupportsSpeechRecognition) {
     return (
@@ -176,7 +204,7 @@ export default function Inbox({ no , handleNo }) {
         {
           mails.map((mail,index)=>{
             return(
-              <MailTab from={mail.sender} subject={mail.subject} body={mail.body} key={index}></MailTab>
+              <MailTab from={mail.sender} subject={mail.subject} body={mail.body} key={index} index={index}></MailTab>
             )
           })
         }

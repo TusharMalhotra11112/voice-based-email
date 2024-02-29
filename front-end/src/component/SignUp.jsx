@@ -475,6 +475,20 @@ export default function SignUp({no,handleNo}) {
   }
 
   
+  useEffect(()=>{
+    const ele = document.querySelectorAll(".stroke");
+    if(listening){
+      for (var index=0 ; index < ele.length; index++) {
+        ele[index].style.opacity = "0.7";
+      }
+    }
+    else{
+      for (var index=0 ; index < ele.length; index++) {
+        ele[index].style.opacity = "0";
+      }
+    }
+  },[listening])
+  
   if (!browserSupportsSpeechRecognition) {
     return (
       <div>Speech Recognition is not supported in this browser</div>
@@ -485,8 +499,8 @@ export default function SignUp({no,handleNo}) {
     <div className='loginTab'>
       <input className='dummy' value={transcriptText} onChange={setTranscriptText}/>
         <p className="loginText">Sign-Up</p>
-        <TextField id="standard-basic loginEmail" label="Email-Id" variant="standard" className='loginEmail' value={email}/>
-        <TextField id="standard-basic" label="Password" variant="standard" className='loginPassword' value={pass} type='Password'/>
+        <TextField id="standard-basic" label="Email-Id" variant="standard" className='loginEmail' value={email} InputProps={{ disableUnderline: true }}/>
+        <TextField id="standard-basic" label="Password" variant="standard" className='loginPassword' value={pass} type='Password' InputProps={{ disableUnderline: true }}/>
         <AudioRecorder
                 recorderControls={recorderControls}
                 audioTrackConstraints={{noiseSuppression:true,echoCancellation:true,sampleRate:1000,}}

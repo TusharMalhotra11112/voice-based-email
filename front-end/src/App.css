@@ -1,6 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
+:root{
+    --text:#d3dbfa;
+    --background:#030719;
+    --primary:#7d8eef;
+    --secondary:#941240;
+    --acent:#e64d37;
+    --poppins:"Poppins",sans-serif;
+    --second-boundary:rgba(9, 16, 36, 0.8);
+}
+
+
 .noteContainer {
     border: 1px solid grey;
     min-height: 15rem;
@@ -21,8 +32,7 @@ button {
     user-select: none;
 }
 body{
-    background-color: #21D4FD;
-        background-image: linear-gradient(19deg, #9E12ED 0%, #3112ED 100%);
+    background-color:var(--background)
 }
 
 .select{
@@ -35,8 +45,15 @@ body{
     gap: 5vh;
 }
 
+.homePageText {
+    font-size: 4rem;
+    font-weight: 600;
+    font: bolder;
+    color: var(--text);
+    font-family: var(--poppins);
+}
 .selectContainer{
-    background-color: rgba(255,255,255,0.3);
+    background-color:var(--second-boundary); 
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     padding: 10vw;
     display: flex;
@@ -66,7 +83,7 @@ body{
 } */
 
 .loginTab{
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: var(--second-boundary);
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 
     display: flex;
@@ -82,29 +99,38 @@ body{
     min-height: 50vh;
 }
 .loginText{
-    color: #CEED12;
+    color: var(--secondary);
+    font-family: var(--poppins);
+    font-weight:500 ;
     font-size: 2.5rem;
 }
-.loginEmail{
+.MuiInputBase-input{
     height: 5vh;
-    width: 30vw;
+    width: 30vw !important;
     border-radius: 20px;
-    padding-left: 20px;
+    padding-left: 20px !important;
     border: none;
-    /* box-shadow: 0px 1px 2px 0px #12ED9E, 1px 2px 4px 0px #12ED9E,2px 4px 8px 0px #12ED9E,2px 4px 16px 0px #12ED9E; */
+    border: none !important;
+    color: white !important;
+    box-shadow: rgba(100, 100, 111, 0.7) 0px 7px 29px 0px;
 }
-.loginPassword{
-    width: 30vw;
+.MuiInputLabel-root{
+    color: white !important;
+    margin-left:20px ;
+    border: none !important;
 }
 .loginBtn{
+    background-color: var(--primary) !important;
     height: 8vh;
     width: 10vw;
 }
 .loginSignupText{
-    color: black;
+    color: white;
+    font-family: var(--poppins);
 }
 .toSignUp{
-    color: red;
+    font-family: var(--poppins);
+    color: var(--secondary);
     font-weight: bold;
     margin: 0px 10px;
 
@@ -125,27 +151,20 @@ body{
     gap: 5vh;
 }
 
-.homePageText{
-    font-size: 3.5rem;
-    font: bolder;
-    color: #ED9E12;
-    font-family: "Poppins", sans-serif;
-}
 .selectButton{
-    background-color: #41D8F1;
-    background: linear-gradient(110deg,#12CEED 0%,#1261ED 100%);
+    background-color: var(--primary) !important;
     border: none;
     cursor: pointer;
-    border-radius: 20px;
+    border-radius: 20px !important;
     font-size: 24px;
     font-family: "Roboto", sans-serif;
-    color: #ED3112;
+    color: black;
     box-shadow: rgba(0, 0, 0, 0.6) 0px 5px 15px;
     font-weight: bold;
 }
 
 .homePageContainer{
-    background-color: rgba(255,255,255,0.3);
+    background-color: var(--second-boundary);
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     padding: 10vw;
     display: flex;
@@ -154,8 +173,11 @@ body{
 }
 .homePageContainer>*{
     width: 20vw;
-    height: 10vh;
-    
+    height: 10vh;   
+}
+.homepageBtn{
+    background-color: var(--primary) !important;
+    border-radius: 20px !important;
 }
 
 
@@ -171,11 +193,11 @@ body{
 .composeText{
     font-size: 3.5rem;
     font: bolder;
-    color: red;
+    color: var(--text);
 }
 
 .composeContainer{
-    background-color: rgba(255,255,255,0.4);
+    background-color: var(--second-boundary);
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     padding: 5vw 5vw;
     display: flex;
@@ -187,10 +209,11 @@ body{
 
 .composeInnerText{
     font-size: 1.5rem;
+    color: white;
 }
 
-.composeTo,.composeSubject,.composeBody{
-    width: 50vw;
+.composeTo .MuiInputBase-input,.composeSubject .MuiInputBase-input,.composeBody .MuiInputBase-input{
+    width: 50vw !important;
 }
 .composeButton{
     width: 10vw;
@@ -205,7 +228,7 @@ body{
 }
 
 .inboxText{
-    color: red;
+    color: var(--primary);
     font: bolder;
     font-size: 3.5rem;
 }
@@ -213,7 +236,7 @@ body{
 .inboxContainer{
     margin: 1rem;
     padding: 5vw;
-    background-color: rgba(255,255,255,0.3);
+    background-color: var(--second-boundary);
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -223,27 +246,30 @@ body{
 
 .mailTab{
     min-height: 3rem;
-    border: 1px solid black;
+    border: 1px solid var(--acent);
     border-radius: 20px;
     display: flex;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     gap: 10vw;
     justify-content: space-between;
     padding: 10px;
     overflow: hidden;
+    flex: 1;
+    opacity: 0.4;
+    /* box-shadow: rgba(148, 18, 64, 0.20) 0px 10px 20px, rgba(148, 18, 64,0.4) 0px 6px 6px; */
 }
 
-.mailTabSelected{
-    border: 1px solid red !important ;
-
-}
 
 .mailSubject{
     width: 50%;
+    color: var(--text);
+    font-family: var(--poppins);
 }
 
 .mailFrom{
     flex: 1;
+    color: var(--text);
+    font-family: var(--poppins);
 }
 
 
@@ -262,7 +288,7 @@ body{
 .stroke{
     width: 2vw;
     height: 15vh;
-    background: linear-gradient(240deg,#ED12CE,#F141D8);
+    background-color: var(--acent);
     transition: all 0.2s ease-in-out;
     animation: voice 1.2s infinite linear;
     border-radius: 20px;
@@ -270,13 +296,13 @@ body{
 }
 @keyframes voice{
     0%{
-        height: 5vh;
+        height: 10vh;
     }
     50%{
-        height: 30vh;
+        height: 35vh;
     }
     100%{
-        height: 5vh;
+        height: 10vh;
     }
 }
 .stroke:nth-child(4n){

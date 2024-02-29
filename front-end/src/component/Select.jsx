@@ -98,29 +98,25 @@ export default function Select({ no, handleNo }) {
       }
     }
   },[listening])
-
+  
+  if (!browserSupportsSpeechRecognition) {
+    return (
+      <div>Speech Recognition is not supported in this browser</div>
+    )
+  }
   return (
     <div className='select'>
       <input className='dummy' value={transcriptText} onChange={setTranscriptText} />
       <p className="homePageText">SELECT</p>
         <div className="selectContainer">
-          <button className="selectButton" onClick={()=>{
-              handleNo(-1)
-              nav("./login")
-            }}>Login</button>
-          <button className="selectButton" onClick={()=>{
-              handleNo(-1)
-              nav("./signup")
-            }}>Sign Up</button>
-
-            {/* <Button variant="contained" size='large' className="selectButton" onClick={()=>{
+            <Button variant="contained" size='large' className="selectButton" onClick={()=>{
               handleNo(-1)
               nav("./login")
             }}>Login</Button> 
-            <Button variant="contained" size='large' onClick={()=>{
+            <Button variant="contained" size='large' className="selectButton" onClick={()=>{
               handleNo(-1)
               nav("./signup")
-            }}>Signup</Button>  */}
+            }}>Signup</Button> 
         </div>
     </div>
   )

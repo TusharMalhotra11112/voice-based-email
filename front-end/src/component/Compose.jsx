@@ -252,6 +252,20 @@ export default function Compose({ no , handleNo }) {
     }
   },[transcript])
 
+  
+  useEffect(()=>{
+    const ele = document.querySelectorAll(".stroke");
+    if(listening){
+      for (var index=0 ; index < ele.length; index++) {
+        ele[index].style.opacity = "0.7";
+      }
+    }
+    else{
+      for (var index=0 ; index < ele.length; index++) {
+        ele[index].style.opacity = "0";
+      }
+    }
+  },[listening])
 
   if (!browserSupportsSpeechRecognition) {
     return (
@@ -265,16 +279,18 @@ export default function Compose({ no , handleNo }) {
       <p className="composeText">Compose</p>
       <div className="composeContainer">
         <div className="innerComposeContainer">
-          <p className="composeInnerText">To:</p>
-          <TextField id="standard-basic" variant="standard" className='composeTo' value={to} />
+          {/* <p className="composeInnerText">To:</p> */}
+          <TextField id="standard-basic" variant="standard" className='composeTo' label="To" value={to} InputProps={{ disableUnderline: true }}/>
         </div>
           <div className="innerComposeContainer">
-          <p className="composeInnerText">Subject:</p>
-        <TextField id="standard-basic" variant="standard" className='composeSubject' value={subject} />
+          {/* <p className="composeInnerText">Subject:</p> */}
+        <TextField id="standard-basic" variant="standard" className='composeSubject' label ="Subject" value={subject} InputProps={{ disableUnderline: true }}/>
         </div>
         <div className="innerComposeContainer">
-          <p className="composeInnerText">Body:</p>
-          <TextField id="outlined-multiline-static" multiline rows={5} className='composeBody' value={body} />
+          {/* <p className="composeInnerText">Body:</p> */}
+          <TextField id="outlined-multiline-static" multiline rows={5} className='composeBody' label="Body" value={body} sx={{
+      "& fieldset": { border: 'none' },
+    }}/>
         </div>
         <Button variant="contained" endIcon={<SendIcon />} className='composeButton'>Send</Button>
       </div>

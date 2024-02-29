@@ -126,7 +126,20 @@ export default function HomePage({ no, handleNo }) {
     console.log(`Transcript:${transcript}`)
     setTranscriptText(transcript)
   },[transcript])
-
+  
+  useEffect(()=>{
+    const ele = document.querySelectorAll(".stroke");
+    if(listening){
+      for (var index=0 ; index < ele.length; index++) {
+        ele[index].style.opacity = "0.7";
+      }
+    }
+    else{
+      for (var index=0 ; index < ele.length; index++) {
+        ele[index].style.opacity = "0";
+      }
+    }
+  },[listening])
 
   if (!browserSupportsSpeechRecognition) {
     return (
@@ -139,9 +152,9 @@ export default function HomePage({ no, handleNo }) {
       <input className='dummy' value={transcriptText} onChange={setTranscriptText} />
       <p className='homePageText'>HomePage</p>
       <div className="homePageContainer">
-        <Button variant="contained" size='large'>Compose</Button>
-        <Button variant="contained" size='large'>Inbox</Button>
-        <Button variant="contained" size='large'>LogOut</Button>
+        <Button variant="contained" size='large' className='homepageBtn'>Compose</Button>
+        <Button variant="contained" size='large' className='homepageBtn'>Inbox</Button>
+        <Button variant="contained" size='large' className='homepageBtn'>LogOut</Button>
       </div>
     </div>
   )
