@@ -3,7 +3,7 @@ from fastapi import FastAPI, File, UploadFile, Form, HTTPException, status
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from typing_extensions import Annotated
-from typing import List, Union
+from typing import List
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import os
@@ -12,15 +12,13 @@ from sqlalchemy import create_engine, text
 from voiceRecog import voiceRecognition
 from sendEmail import sendEmail
 from getInboxEmails import getEmails as getInboxEmails
-import uuid
 from dotenv import load_dotenv
-from utils import make_request, extractJSON, ask_to_openai
+from utils import extractJSON, ask_to_openai
 import re
 
 load_dotenv()
 
 MYSQL_URL = os.getenv("MYSQL_URL")
-REPLICATE_API_TOKEN = os.getenv("REPLICATE_API_TOKEN")
 
 engine = create_engine(MYSQL_URL)
 
@@ -246,7 +244,7 @@ def GetQuestions(email: EmailTopic):
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
     # now, making request to openai for getting the questions.
-    system_prompt = "You are a skilled email writer. Here you do not need to write an email, but ask for suitable questions, which ask for the facts and information you need to write an email like what is the name of the receiver, what is the purpose of the email, etc. Remember the output should a JSON array of questions."
+    system_prompt = "You are a skilled email writer. Here you do not need to write an email, but ask for suitable questions, which ask for the facts and information you need to write an email like what is the name of the receiver, what is the purpose of the email, etc. Remember the output should a JSON array of questions, number of questions should be atmost 5."
 
     prompt = email.topic
 
