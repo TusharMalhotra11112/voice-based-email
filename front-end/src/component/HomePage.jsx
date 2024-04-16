@@ -152,9 +152,9 @@ export default function HomePage({ no, handleNo }) {
       <input className='dummy' value={transcriptText} onChange={setTranscriptText} />
       <p className='homePageText'>HomePage</p>
       <div className="homePageContainer">
-        <Button variant="contained" size='large' className='homepageBtn'>Compose</Button>
-        <Button variant="contained" size='large' className='homepageBtn'>Inbox</Button>
-        <Button variant="contained" size='large' className='homepageBtn'>LogOut</Button>
+        <Button variant="contained" size='large' className='homepageBtn' onClick={manageInbox}>Inbox</Button>
+        <Button variant="contained" size='large' className='homepageBtn' onClick={manageCompose}>Compose</Button>
+        <Button variant="contained" size='large' className='homepageBtn' onClick={manageLogOut} >LogOut</Button>
       </div>
     </div>
   )
