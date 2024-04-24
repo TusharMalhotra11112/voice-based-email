@@ -71,10 +71,19 @@ export default function Inbox({ no , handleNo }) {
 
   const sayBody = ()=>{
     return new Promise((res,rej)=>{
-      say(`${mails[mailNo].body}`,10000)
-      .then(()=>{
-        res('')
-      })
+      let bodyData = {
+        "user_id":localStorage.getItem("user_id"),
+        "text":mails[mailNo].body,
+      }
+      axios.post("http://localhost:8000/summarizeEmail/",bodyData)
+      .then((data)=>{
+        console.log(data)
+        console.log(data.data)
+        say(`${data.data.summary}`,10000)
+        .then(()=>{
+          res('')
+        })
+      }) 
     })
   }
 
